@@ -3,7 +3,7 @@ import {defineConfig} from 'vite'
 import react from '@vitejs/plugin-react'
 import {VitePWA} from 'vite-plugin-pwa'
 
-let faviconURL = '/favicon.svg'
+let faviconURL = '/favicon.png'
 export default ({mode}) => {
     const dev = mode === 'development';
     // console.log(mode, dev);
