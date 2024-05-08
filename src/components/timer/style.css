@@ -280,43 +280,26 @@ button.del-icon {
     padding-left: 1em;
     margin: 0;
 }
-.history-list {
-    overflow: hidden;
-    overflow-y: auto;
-    min-height: 40vh;
+
+#navBar {
+    display: inline-block;
+    background-color: #aaa;
 }
 
-
-
-body{
-    margin:0;
-}
-ul{
-    list-style:none;
-    margin:0;
-    padding:0;
-}
-li{
-    padding:8px;
-    background-color:#ccc;
-    margin-right:2px
-}
-#navBar{
-    display:inline-block;
-    background-color:#aaa;
-}
-#navBar a{
-    cursor:pointer;
-    text-decoration:none;
-    color:black;
+#navBar a {
+    cursor: pointer;
+    text-decoration: none;
+    color: black;
 }
 
 .modal-window .label {
     font-size: 14px;
 }
+
 .upload-btn {
     width: 120px;
 }
+
 .file:not(:last-child) {
     margin-bottom: 15px;
 }
@@ -326,9 +309,11 @@ li{
     margin-right: 10px;
     word-break: break-word;
 }
+
 .option {
     margin-bottom: 15px;
 }
+
 .modal-window .modal-btn {
     padding-left: 0;
 }
@@ -338,3 +323,24 @@ label {
     display: inline-block;
     width: 77px;
 }
+
+
+.App {
+    font-family: sans-serif;
+    text-align: center;
+}
+
+.ms-default-trigger {
+    width: 350px;
+    border: 1px solid rebeccapurple;
+    border-radius: 5px;
+    line-height: 35px;
+    padding: 0px 10px;
+    margin: 0px auto;
+}
+
+.my-trigger-style {
+    color: skyblue;
+    font-weight: bold;
+}
+

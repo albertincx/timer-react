@@ -1,7 +1,8 @@
 import React, {Component, useState} from 'react';
 // @ts-ignore
-import { TimePicker } from 'react-ios-time-picker';
-
+// import { TimePicker } from 'react-ios-time-picker';
+import {CascadeData} from "mobile-select";
+import MSComponent from "./components/Ms";
 import Storage from '../../utils/storage';
 import Settings from "./components/Settings";
 import {APP_SETTINGS, POPUP_DEMO, POPUP_DISCUSS, POPUP_SETTINGS, SCROLL_VAR, SUBS_KEY} from "./consts";
@@ -16,7 +17,10 @@ import {
     testLoadVoices,
 } from "./utils";
 import {ISettings} from "./types";
+
 import './style.css';
+
+// import "mobile-select/dist/style/mobile-select.css";
 
 const errors: any = {
     SAME: 'Files same, please upload different filename',
@@ -38,19 +42,184 @@ interface IState {
     pitch: any,
 }
 
-const  MyApp = () => {
-    const [value, setValue] = useState('10:00');
+const demoData = [
+    {id: "1", value: "兰博基尼"},
+    {
+        id: "2",
+        value: "劳斯莱斯",
+        childs: [
+            {
+                id: "1",
+                value: "曜影"
+            },
+            {
+                id: "2",
+                value: "幻影",
+                childs: [
+                    {
+                        id: "1",
+                        value: "标准版"
+                    },
+                    {
+                        id: "2",
+                        value: "加长版"
+                    },
+                    {
+                        id: "3",
+                        value: "巅峰之旅"
+                    },
+                    {
+                        id: "4",
+                        value: "流光熠世"
+                    },
+                    {
+                        id: "5",
+                        value: "都会典藏版"
+                    }
+                ]
+            },
+            {
+                id: "3",
+                value: "古思特",
+                childs: [
+                    {
+                        id: "1",
+                        value: "加长版"
+                    },
+                    {
+                        id: "2",
+                        value: "永恒之爱"
+                    },
+                    {
+                        id: "3",
+                        value: "英骥"
+                    },
+                    {
+                        id: "4",
+                        value: "阿尔卑斯典藏版"
+                    }
+                ]
+            },
+            {
+                id: "4",
+                value: "魅影",
+                childs: [
+                    {
+                        id: "1",
+                        value: "标准版"
+                    },
+                    {
+                        id: "2",
+                        value: "Black Badge"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        id: "3",
+        value: "宾利",
+        childs: [
+            {
+                id: "1",
+                value: "慕尚",
+                childs: [
+                    {
+                        id: "1",
+                        value: "标准版"
+                    },
+                    {
+                        id: "2",
+                        value: "极致版"
+                    }
+                ]
+            },
+            {
+                id: "2",
+                value: "欧陆",
+                childs: [
+                    {
+                        id: "1",
+                        value: "尊贵版"
+                    },
+                    {
+                        id: "2",
+                        value: "敞篷标准版"
+                    },
+                    {
+                        id: "3",
+                        value: "敞篷尊贵版"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        id: "4",
+        value: "法拉利",
+        childs: [
+            {
+                id: "1",
+                value: "LaFerrari"
+            },
+            {
+                id: "2",
+                value: "法拉利488"
+            },
+            {
+                id: "3",
+                value: "GTC4Lusso"
+            }
+        ]
+    },
+    {
+        id: "5",
+        value: "玛莎拉蒂",
+        childs: [
+            {
+                id: "1",
+                value: "总裁"
+            },
+            {
+                id: "2",
+                value: "玛莎拉蒂GT"
+            },
+            {
+                id: "3",
+                value: "Levante"
+            }
+        ]
+    }
+];
 
+const MyApp = () => {
+    const [value, setValue] = useState('10:00');
+    const config = {
+        wheels: [
+            {
+                data: demoData
+            }
+        ],
+        onChange: (
+            data: number[] | string[] | CascadeData[],
+            indexArr: number[],
+            instance: any
+        ) => {
+            console.log("callback", data, indexArr, instance);
+            // setVal(JSON.stringify(data));
+        }
+    }
     const onChange = (timeValue: React.SetStateAction<string>) => {
         setValue(timeValue);
     }
 
     return (
-        <div>
-            <TimePicker onChange={onChange} value={value} />
+        <div className="App">
+            <MSComponent config={config}/>
         </div>
     );
 }
+
 class Index extends Component<any, IState> {
     buttonPressTimer: any;
 
@@ -350,7 +519,7 @@ class Index extends Component<any, IState> {
                         voiceSettingSave={this.voiceSettingSave}
                     />
                 ) : null}
-                <MyApp />
+                <MyApp/>
             </div>
         );
     }
