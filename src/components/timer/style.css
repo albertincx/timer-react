@@ -335,8 +335,8 @@ label {
     border: 1px solid rebeccapurple;
     border-radius: 5px;
     line-height: 35px;
-    padding: 0px 10px;
-    margin: 0px auto;
+    padding: 0 10px;
+    margin: 0 auto;
 }
 
 .my-trigger-style {
