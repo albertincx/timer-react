@@ -21,6 +21,7 @@ import {ISettings} from "./types";
 import notifySound from '../../alarm-clock-short.mp3'
 
 import './style.css';
+
 // import Countdown from "react-countdown";
 
 interface IState {
@@ -100,8 +101,8 @@ const UrgeWithPleasureComponent = ({t}: any) => {
     const dd = !!getTimeDays(daysDuration - remainingTime);
     // console.log(timerProps);
     // timerProps.key = t;
-    const isShowHours = t/60/60>1;
-    console.log(isShowHours, t/60/60);
+    const isShowHours = t / 60 / 60 > 1;
+    console.log(isShowHours, t / 60 / 60);
     // console.log(daysDuration, getTimeHours(daysDuration - (remainingTime % daySeconds)));
     return (
         <>
@@ -167,7 +168,7 @@ const UrgeWithPleasureComponent = ({t}: any) => {
                 updateInterval={2}
                 onUpdate={(rrr) => {
                     let tt: any = document.title.split('Timer ');
-                    tt = t - (60-rrr);
+                    tt = t - (60 - rrr);
                     // console.log(tt, rrr);
                     const hour = Math.floor(+tt / 60);
                     if (hour > 0) {
@@ -185,7 +186,15 @@ const UrgeWithPleasureComponent = ({t}: any) => {
                 onComplete={(totalElapsedTime) => {
                     const shouldRepeat = remainingTime - totalElapsedTime > 0;
                     if (!shouldRepeat) {
-                        new Notification("Hi there!");
+
+                        //index ServiceWorkerRegistration.showNotification() instead.
+                        try {
+                            new Notification("Hi there!");
+                        } catch (e) {
+                            navigator.serviceWorker.ready.then(function (registration) {
+                                registration.showNotification("Hi there!", {body: "TIMER EXPIRED!"});
+                            });
+                        }
                         playSound()
                     }
                     return {shouldRepeat}
@@ -233,13 +242,16 @@ const initDemoData = [...demoData];
 
 const sound = new Audio(notifySound)
 
-function playSound () {
-    sound.play().then(() => {})
+function playSound() {
+    sound.play().then(() => {
+    })
 }
+
 function stopSound() {
     sound.pause();
     sound.currentTime = 0;
 }
+
 const MyApp = () => {
     // const [value, setValue] = useState('10:00');
     const [countDown, setCountDown] = useState(countD);
