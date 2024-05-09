@@ -38,17 +38,13 @@ interface IState {
     volume: any,
     pitch: any,
 }
+let isNotifyOn = false;
+if ('Notification' in window) {
+    Notification.requestPermission().then(function (permission) {
+        isNotifyOn = permission === 'granted';
+    });
+}
 
-Notification.requestPermission().then(function (permission) {
-    if (permission === 'granted') {
-        // console.log('Notification permission granted.');
-        if (permission === "granted") {
-            // var notification = new Notification("Hi there!");
-        }
-    } else {
-        // console.log('Unable to get permission to notify.');
-    }
-});
 // @ts-ignore
 let demoData: { id: string; value: string; childs: { id: string; value: string; }[]; }[] = [];
 const minDemoData: { id: string; value: string; }[] = [];
@@ -186,14 +182,14 @@ const UrgeWithPleasureComponent = ({t}: any) => {
                 onComplete={(totalElapsedTime) => {
                     const shouldRepeat = remainingTime - totalElapsedTime > 0;
                     if (!shouldRepeat) {
-
-                        //index ServiceWorkerRegistration.showNotification() instead.
-                        try {
-                            new Notification("Hi there!");
-                        } catch (e) {
-                            navigator.serviceWorker.ready.then(function (registration) {
-                                registration.showNotification("Hi there!", {body: "TIMER EXPIRED!"});
-                            });
+                        if (isNotifyOn) {
+                            try {
+                                new Notification("Hi there!");
+                            } catch (e) {
+                                navigator.serviceWorker.ready.then(function (registration) {
+                                    registration.showNotification("Hi there!", {body: "TIMER EXPIRED!"});
+                                });
+                            }
                         }
                         playSound()
                     }
@@ -219,7 +215,6 @@ Array.from({length: 23}).map((_, idx) => {
 })
 
 const Completionist = () => {
-    new Notification("Hi there!");
     return <span>You are good to go!</span>;
 }
 
