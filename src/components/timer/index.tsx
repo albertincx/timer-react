@@ -42,7 +42,7 @@ interface IState {
     pitch: any,
 }
 
-const demoData = [
+let demoData = [
     {id: "1", value: "兰博基尼"},
     {
         id: "2",
@@ -191,10 +191,17 @@ const demoData = [
         ]
     }
 ];
-
+demoData = [];
+Array.from({length: 23}).map((_, idx) => {
+    console.log(idx);
+    demoData.push({id: `${idx + 1}`, value: `${idx + 1}`, childs: [{id: `${idx + 1}`, value: `${idx + 1}` }]})
+})
+console.log(demoData);
 const MyApp = () => {
     const [value, setValue] = useState('10:00');
     const config = {
+        ensureBtnText: 'save',
+        cancelBtnText: 'cancel',
         wheels: [
             {
                 data: demoData
