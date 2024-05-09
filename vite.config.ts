@@ -26,7 +26,7 @@ export default ({mode}) => {
                     icons: [
                         {
                             src: faviconURL,
-                            sizes: '512x512',
+                            sizes: '32x42',
                             type: 'image/png',
                         }
                     ]
@@ -38,7 +38,7 @@ export default ({mode}) => {
                     server.middlewares.use(
                         (req: any, res, next) => {
                             if (req.url === '/') {
-                                req.url = `/${dev ? 'dev' : 'index-build'}.html`;
+                                req.url = '/dev.html';
                             }
                             next();
                         }

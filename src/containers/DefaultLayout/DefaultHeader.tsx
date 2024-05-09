@@ -29,14 +29,6 @@ const DefaultHeader = () => {
                         <h1>Greetings!</h1>
                         <div>
                             <div>This is an offline timer</div>
-                            <div>
-                                <small>Watch video! </small>
-                            </div>
-                            <div>
-                                <a href="https://www.youtube.com/watch?v=WcuAcBbDnfc">
-                                    <i className="icon watch-v"/>
-                                </a>
-                            </div>
                             <p>
                                 <small>Support</small>
                             </p>

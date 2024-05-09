@@ -23,14 +23,13 @@ export default function MsComponent(props: MSProps) {
         return () => {
             instanceRef?.current.destroy();
             instanceRef.current = null;
-            // console.log("销毁时调用", instanceRef);
         };
     }, []);
 
     return (
         <div>
             <div className="ms-default-trigger" ref={triggerRef}>
-                {props.children || props.placeholder || "Please select an option..!"}
+                {props.children || props.placeholder || "Custom time"}
             </div>
         </div>
     );

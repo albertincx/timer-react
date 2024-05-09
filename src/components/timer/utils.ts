@@ -1,6 +1,5 @@
 import Storage from "../../utils/storage";
 import {APP_SETTINGS, timerHistory, SUBS_KEY} from "./consts";
-import {fixSubs, splitSubs} from "./fixsubs";
 import {FilesData, ISettings, StorageFile} from "./types";
 
 export const getSubs = () => {
@@ -68,17 +67,6 @@ export const getItems = (subs?: any[]): FilesData => {
     const filenames = [subs[0].filename];
     let items: any[] = [];
 
-    if (subs[0]) {
-        const split = splitSubs(subs[0]);
-        items = [split];
-    }
-
-    if (subs[1]) {
-        filenames.push(subs[1].filename);
-        const split = splitSubs(subs[1]);
-        items.push(split);
-    }
-
     return {items, filenames};
 };
 
@@ -106,10 +94,6 @@ export const findSubs = (files: any[], restore = false) => {
             const currentSubs = getSubs();
             if (currentSubs) {
                 saveToLocalStorage(currentSubs, true);
-            }
-        } else {
-            if (subs.length === 2) {
-                subs = fixSubs(subs);
             }
         }
         Storage.setJ(SUBS_KEY, subs);

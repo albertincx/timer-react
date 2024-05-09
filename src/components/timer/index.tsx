@@ -1,8 +1,8 @@
 import React, {Component, useState} from 'react';
-// @ts-ignore
-// import { TimePicker } from 'react-ios-time-picker';
 import {CascadeData} from "mobile-select";
-import MSComponent from "./components/Ms";
+import {CountdownCircleTimer, useCountdown} from 'react-countdown-circle-timer'
+
+// import MSComponent from "./components/Ms";
 import Storage from '../../utils/storage';
 import Settings from "./components/Settings";
 import {APP_SETTINGS, POPUP_DEMO, POPUP_DISCUSS, POPUP_SETTINGS, SCROLL_VAR, SUBS_KEY} from "./consts";
@@ -10,22 +10,18 @@ import {APP_SETTINGS, POPUP_DEMO, POPUP_DISCUSS, POPUP_SETTINGS, SCROLL_VAR, SUB
 import {
     getLocales,
     findSubs,
-    getItems, getSettings,
+    getItems,
+    getSettings,
     getSubs,
     saveToLocalStorage,
     speak,
     testLoadVoices,
 } from "./utils";
 import {ISettings} from "./types";
+import notifySound from '../../alarm-clock-short.mp3'
 
 import './style.css';
-import Countdown from "react-countdown";
-import {a} from "vite/dist/node/types.d-aGj9QkWt";
-
-const errors: any = {
-    SAME: 'Files same, please upload different filename',
-    EMPTY: 'One of uploaded file has empty content, please upload another file',
-};
+// import Countdown from "react-countdown";
 
 interface IState {
     showStr: string,
@@ -41,7 +37,8 @@ interface IState {
     volume: any,
     pitch: any,
 }
-Notification.requestPermission().then(function(permission) {
+
+Notification.requestPermission().then(function (permission) {
     if (permission === 'granted') {
         // console.log('Notification permission granted.');
         if (permission === "granted") {
@@ -51,163 +48,167 @@ Notification.requestPermission().then(function(permission) {
         // console.log('Unable to get permission to notify.');
     }
 });
-let demoData = [
-    {id: "1", value: "兰博基尼"},
-    {
-        id: "2",
-        value: "劳斯莱斯",
-        childs: [
-            {
-                id: "1",
-                value: "曜影"
-            },
-            {
-                id: "2",
-                value: "幻影",
-                childs: [
-                    {
-                        id: "1",
-                        value: "标准版"
-                    },
-                    {
-                        id: "2",
-                        value: "加长版"
-                    },
-                    {
-                        id: "3",
-                        value: "巅峰之旅"
-                    },
-                    {
-                        id: "4",
-                        value: "流光熠世"
-                    },
-                    {
-                        id: "5",
-                        value: "都会典藏版"
+// @ts-ignore
+let demoData: { id: string; value: string; childs: { id: string; value: string; }[]; }[] = [];
+const minDemoData: { id: string; value: string; }[] = [];
+const minDemoDataCurrent: { id: string; value: string; }[] = [];
+const h = new Date().getHours();
+const getH = () => new Date().getHours();
+const m = new Date().getMinutes();
+// console.log(h);
+
+const minuteSeconds = 60;
+const hourSeconds = 3600;
+const daySeconds = 86400;
+
+const timerProps = {
+    isPlaying: true,
+    size: 120,
+    strokeWidth: 6
+};
+import type {Props} from 'react-countdown-circle-timer'
+
+// @ts-ignore
+const renderTime = (dimension, time) => {
+    return (
+        <div className="time-wrapper">
+            <div className="time">{time}</div>
+            <div>{dimension}</div>
+        </div>
+    );
+};
+
+// @ts-ignore
+const getTimeSeconds = (time) => (minuteSeconds - time) | 0;
+// @ts-ignore
+const getTimeMinutes = (time) => ((time % hourSeconds) / minuteSeconds) | 0;
+// @ts-ignore
+const getTimeHours = (time) => ((time % daySeconds) / hourSeconds) | 0;
+// @ts-ignore
+const getTimeDays = (time) => (time / daySeconds) | 0;
+
+const UrgeWithPleasureComponent = ({t}: any) => {
+    const startTime = Date.now() / 1000; // use UNIX timestamp in seconds
+    const endTime = startTime + t; // use UNIX timestamp in seconds
+
+    const remainingTime = endTime - startTime;
+    const days = Math.ceil(remainingTime / daySeconds);
+    const daysDuration = days * daySeconds;
+    const size = 80;
+    timerProps.size = size;
+    // console.log(remainingTime);
+    const dd = !!getTimeDays(daysDuration - remainingTime);
+    // console.log(timerProps);
+    // timerProps.key = t;
+    const isShowHours = t/60/60>1;
+    console.log(isShowHours, t/60/60);
+    // console.log(daysDuration, getTimeHours(daysDuration - (remainingTime % daySeconds)));
+    return (
+        <>
+            {/*<CountdownCircleTimerS*/}
+            {/*    duration={t} size={80} colors="#ddd" onComplete={() => {}} isPlaying*/}
+            {/*    initialRemainingTime={remainingTime}*/}
+            {/*    trailColor="#7E2E84"*/}
+            {/*    strokeWidth={6}*/}
+            {/*/>*/}
+            {dd && (
+                <CountdownCircleTimer
+                    {...timerProps}
+                    key={`d${t}`}
+                    colors="#7E2E84"
+                    duration={daysDuration}
+                    initialRemainingTime={remainingTime}
+                >
+                    {({elapsedTime, color}) => (
+                        <span style={{color}}>
+            {renderTime("days", getTimeDays(daysDuration - elapsedTime))}
+          </span>
+                    )}
+                </CountdownCircleTimer>
+            )}
+            {isShowHours && (
+                <CountdownCircleTimer
+                    {...timerProps}
+                    key={`h${t}`}
+                    colors="#D14081"
+                    duration={daySeconds}
+                    initialRemainingTime={remainingTime % daySeconds}
+                    onComplete={(totalElapsedTime) => ({
+                        shouldRepeat: remainingTime - totalElapsedTime > hourSeconds
+                    })}
+                >
+                    {({elapsedTime, color}) => (
+                        <span style={{color}}>
+            {renderTime("hours", getTimeHours(daySeconds - elapsedTime))}
+          </span>
+                    )}
+                </CountdownCircleTimer>
+            )}
+            <CountdownCircleTimer
+                {...timerProps}
+                key={`m${t}`}
+                colors="#EF798A"
+                duration={hourSeconds}
+                initialRemainingTime={remainingTime % hourSeconds}
+                onComplete={(totalElapsedTime) => ({
+                    shouldRepeat: remainingTime - totalElapsedTime > minuteSeconds
+                })}
+            >
+                {({elapsedTime, color}) => (
+                    <span style={{color}}>
+            {renderTime("minutes", getTimeMinutes(hourSeconds - elapsedTime))}
+          </span>
+                )}
+            </CountdownCircleTimer>
+            <CountdownCircleTimer
+                {...timerProps}
+                key={`s${t}`}
+                colors="#218380"
+                updateInterval={2}
+                onUpdate={(rrr) => {
+                    let tt: any = document.title.split('Timer ');
+                    tt = t - (60-rrr);
+                    // console.log(tt, rrr);
+                    const hour = Math.floor(+tt / 60);
+                    if (hour > 0) {
+                        const d = `${hour}:${+tt % 60}`;
+                        // console.log(rrr)
+                        // console.log(Math.floor(tt / 60))
+
+                        document.title = `(${d}) Timer ${tt}`;
+                        // console.log(remainingTime, rrr, remainingTime - totalElapsedTime);
                     }
-                ]
-            },
-            {
-                id: "3",
-                value: "古思特",
-                childs: [
-                    {
-                        id: "1",
-                        value: "加长版"
-                    },
-                    {
-                        id: "2",
-                        value: "永恒之爱"
-                    },
-                    {
-                        id: "3",
-                        value: "英骥"
-                    },
-                    {
-                        id: "4",
-                        value: "阿尔卑斯典藏版"
+
+                }}
+                duration={minuteSeconds}
+                initialRemainingTime={remainingTime % minuteSeconds}
+                onComplete={(totalElapsedTime) => {
+                    const shouldRepeat = remainingTime - totalElapsedTime > 0;
+                    if (!shouldRepeat) {
+                        new Notification("Hi there!");
+                        playSound()
                     }
-                ]
-            },
-            {
-                id: "4",
-                value: "魅影",
-                childs: [
-                    {
-                        id: "1",
-                        value: "标准版"
-                    },
-                    {
-                        id: "2",
-                        value: "Black Badge"
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        id: "3",
-        value: "宾利",
-        childs: [
-            {
-                id: "1",
-                value: "慕尚",
-                childs: [
-                    {
-                        id: "1",
-                        value: "标准版"
-                    },
-                    {
-                        id: "2",
-                        value: "极致版"
-                    }
-                ]
-            },
-            {
-                id: "2",
-                value: "欧陆",
-                childs: [
-                    {
-                        id: "1",
-                        value: "尊贵版"
-                    },
-                    {
-                        id: "2",
-                        value: "敞篷标准版"
-                    },
-                    {
-                        id: "3",
-                        value: "敞篷尊贵版"
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        id: "4",
-        value: "法拉利",
-        childs: [
-            {
-                id: "1",
-                value: "LaFerrari"
-            },
-            {
-                id: "2",
-                value: "法拉利488"
-            },
-            {
-                id: "3",
-                value: "GTC4Lusso"
-            }
-        ]
-    },
-    {
-        id: "5",
-        value: "玛莎拉蒂",
-        childs: [
-            {
-                id: "1",
-                value: "总裁"
-            },
-            {
-                id: "2",
-                value: "玛莎拉蒂GT"
-            },
-            {
-                id: "3",
-                value: "Levante"
-            }
-        ]
-    }
-];
-demoData = [];
-const mindemoData: { id: string; value: string; }[] = [];
+                    return {shouldRepeat}
+                }}
+            >
+                {({elapsedTime, color}) => (
+                    <span style={{color}}>
+            {renderTime("seconds", getTimeSeconds(elapsedTime))}
+          </span>
+                )}
+            </CountdownCircleTimer>
+        </>
+    )
+}
+
 Array.from({length: 59}).map((_, idx) => {
-    mindemoData.push({id: `${idx + 1}`, value: `${idx + 1}`})
+    minDemoData.push({id: `${idx + 1}`, value: `${idx + 1}`})
 })
+
 Array.from({length: 23}).map((_, idx) => {
-    demoData.push({id: `${idx + 1}`, value: `${idx + 1}`, childs: [...mindemoData]})
+    (idx + 1) >= h && demoData.push({id: `${idx + 1}`, value: `${idx + 1}`, childs: [...minDemoData]})
 })
+
 const Completionist = () => {
     new Notification("Hi there!");
     return <span>You are good to go!</span>;
@@ -219,7 +220,6 @@ const renderer = ({hours, minutes, seconds, completed}: any) => {
         // Render a completed state
         return <Completionist/>;
     } else {
-        // return null;
         // Render a countdown
         return <span>{hours}:{minutes}:{seconds}</span>;
     }
@@ -227,16 +227,30 @@ const renderer = ({hours, minutes, seconds, completed}: any) => {
 let countD: number = 0, url = location.href.split('timer=');
 if (url[1]) {
     countD = +url[1];
+    document.title = `Timer ${countD}`
+}
+const initDemoData = [...demoData];
+
+const sound = new Audio(notifySound)
+
+function playSound () {
+    sound.play().then(() => {})
+}
+function stopSound() {
+    sound.pause();
+    sound.currentTime = 0;
 }
 const MyApp = () => {
-    const [value, setValue] = useState('10:00');
+    // const [value, setValue] = useState('10:00');
     const [countDown, setCountDown] = useState(countD);
+    const [curDemoData, setDemoData] = useState(initDemoData);
+    // console.log(demoData);
     const config = {
         ensureBtnText: 'save',
         cancelBtnText: 'cancel',
         wheels: [
             {
-                data: demoData
+                data: curDemoData
             }
         ],
         onChange: (
@@ -246,38 +260,53 @@ const MyApp = () => {
         ) => {
             // console.log("callback", data, indexArr, instance);
             // setVal(JSON.stringify(data));
+            // console.log('onS', curDemoData);
+            // setDemoData(curDemoData.map(dd => dd.id > getH()))
         }
     }
-    const onChange = (timeValue: React.SetStateAction<string>) => {
-        setValue(timeValue);
-    }
+
     const setTimer = (e: any) => {
         const tm = e.target.dataset.time;
-        location.href = '#timer=' + tm
         if (tm) {
+            window.history.pushState('time', '', '/time?timer=' + tm);
+            document.title = `Timer ${tm}`
             setCountDown(+tm)
         }
     }
     const reset = () => {
         setCountDown(0);
+        stopSound()
+        window.history.pushState('home', '', '/');
     }
 
     return (
-        <div className="App">
-            <MSComponent config={config}/>
+        <div className="App1">
             <div className="grid times">
                 <div onClick={setTimer} data-time="3">3 sec</div>
-                <div onClick={setTimer} data-time="10">10 sec</div>
-                <div onClick={setTimer} data-time="20">20 sec</div>
+                <div onClick={setTimer} data-time="600">10 min</div>
+                <div onClick={setTimer} data-time="1200">20 min</div>
+                <div onClick={setTimer} data-time="1800">30 min</div>
+                <div onClick={setTimer} data-time="3600">1 hour</div>
+                <div onClick={setTimer} data-time="4800">1 hour 20 min</div>
             </div>
-            {countDown && (
-                <Countdown
-                    date={Date.now() + (countDown * 1000)}
-                    onComplete={reset}
-                    // renderer={renderer}
-                >
-                    <Completionist/>
-                </Countdown>
+            {/*<MSComponent config={config}/>*/}
+            <br/>
+            {!!countDown && (
+                <>
+                    {/*<Countdown*/}
+                    {/*    date={Date.now() + (countDown * 1000)}*/}
+                    {/*    onComplete={reset}*/}
+                    {/*    // renderer={renderer}*/}
+                    {/*>*/}
+                    {/*    <Completionist/>*/}
+                    {/*</Countdown>*/}
+                    <br/>
+                    <div className="App">
+                        <UrgeWithPleasureComponent t={countDown}/>
+                    </div>
+                    <br/>
+                    <button className="stop-timer btn" onClick={reset}>Stop timer!</button>
+                </>
             )}
         </div>
     );
@@ -534,35 +563,6 @@ class Index extends Component<any, IState> {
                             onClick={this.voiceSetting}
                         />
                     </div>
-                </div>
-                <div className='lang-items'>
-                    {items.length === 1 ? (
-                        <div className='load-step'>
-                            {error ? (
-                                <>
-                                    <div className='alert alert-danger'>{errors[error]}
-                                    </div>
-                                    <br/>
-                                </>
-                            ) : null}
-                            <div>
-                                1 File {filenames[0]}
-                                <span className='green'> loaded</span>
-                            </div>
-                            <div>
-                                2 File <span className='gray'>not loaded</span>
-                            </div>
-                            <br/>
-                            <div>
-                                <button className='btn' onClick={this.clear}>
-                                    Delete all
-                                </button>
-                            </div>
-                        </div>
-                    ) : null}
-                    {items.length === 2
-                        ? items[0].map((str: string, ind: number) => this.renderRow(str, ind))
-                        : null}
                 </div>
                 {modal === POPUP_SETTINGS ? (
                     <Settings
