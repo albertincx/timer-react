@@ -347,34 +347,6 @@ label {
     font-weight: bold;
 }
 
-table, th, td {
-    border-collase: collapse;
-    padding: 5px;
-    text-align: left;
-}
-
-th {
-    text-transform: uppercase;
-    background-color: #3b3b3b;
-    color: #fff;
-    font-family: open sans, sans-serif;
-}
-
-input[type="button"] {
-    background-color: #ff7700;
-    color: #fff;
-    font-size: 14px;
-    border: none;
-    cursor: pointer;
-    text-transform: uppercase;
-    padding: 5px;
-}
-
-#marketTimerTable {
-    width: 100%;
-    border-bottom: 1px solid black;
-}
-
 .times {
     display: flex;
     justify-content: space-between;
@@ -383,8 +355,6 @@ input[type="button"] {
 .times > div {
     background-image: url("./favicon.png");
     background-repeat: no-repeat;
-    /*width: 20%;*/
-    /*padding: 10px;*/
     background-color: #fff;
     background-position: 8px 50%;
 }
