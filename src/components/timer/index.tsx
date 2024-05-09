@@ -19,8 +19,8 @@ import {
 import {ISettings} from "./types";
 
 import './style.css';
-
-// import "mobile-select/dist/style/mobile-select.css";
+import Countdown from "react-countdown";
+import {a} from "vite/dist/node/types.d-aGj9QkWt";
 
 const errors: any = {
     SAME: 'Files same, please upload different filename',
@@ -41,7 +41,16 @@ interface IState {
     volume: any,
     pitch: any,
 }
-
+Notification.requestPermission().then(function(permission) {
+    if (permission === 'granted') {
+        // console.log('Notification permission granted.');
+        if (permission === "granted") {
+            // var notification = new Notification("Hi there!");
+        }
+    } else {
+        // console.log('Unable to get permission to notify.');
+    }
+});
 let demoData = [
     {id: "1", value: "兰博基尼"},
     {
@@ -192,13 +201,36 @@ let demoData = [
     }
 ];
 demoData = [];
-Array.from({length: 23}).map((_, idx) => {
-    console.log(idx);
-    demoData.push({id: `${idx + 1}`, value: `${idx + 1}`, childs: [{id: `${idx + 1}`, value: `${idx + 1}` }]})
+const mindemoData: { id: string; value: string; }[] = [];
+Array.from({length: 59}).map((_, idx) => {
+    mindemoData.push({id: `${idx + 1}`, value: `${idx + 1}`})
 })
-console.log(demoData);
+Array.from({length: 23}).map((_, idx) => {
+    demoData.push({id: `${idx + 1}`, value: `${idx + 1}`, childs: [...mindemoData]})
+})
+const Completionist = () => {
+    new Notification("Hi there!");
+    return <span>You are good to go!</span>;
+}
+
+// Renderer callback with condition
+const renderer = ({hours, minutes, seconds, completed}: any) => {
+    if (completed) {
+        // Render a completed state
+        return <Completionist/>;
+    } else {
+        // return null;
+        // Render a countdown
+        return <span>{hours}:{minutes}:{seconds}</span>;
+    }
+};
+let countD: number = 0, url = location.href.split('timer=');
+if (url[1]) {
+    countD = +url[1];
+}
 const MyApp = () => {
     const [value, setValue] = useState('10:00');
+    const [countDown, setCountDown] = useState(countD);
     const config = {
         ensureBtnText: 'save',
         cancelBtnText: 'cancel',
@@ -212,27 +244,48 @@ const MyApp = () => {
             indexArr: number[],
             instance: any
         ) => {
-            console.log("callback", data, indexArr, instance);
+            // console.log("callback", data, indexArr, instance);
             // setVal(JSON.stringify(data));
         }
     }
     const onChange = (timeValue: React.SetStateAction<string>) => {
         setValue(timeValue);
     }
+    const setTimer = (e: any) => {
+        const tm = e.target.dataset.time;
+        location.href = '#timer=' + tm
+        if (tm) {
+            setCountDown(+tm)
+        }
+    }
+    const reset = () => {
+        setCountDown(0);
+    }
 
     return (
         <div className="App">
             <MSComponent config={config}/>
+            <div className="grid times">
+                <div onClick={setTimer} data-time="3">3 sec</div>
+                <div onClick={setTimer} data-time="10">10 sec</div>
+                <div onClick={setTimer} data-time="20">20 sec</div>
+            </div>
+            {countDown && (
+                <Countdown
+                    date={Date.now() + (countDown * 1000)}
+                    onComplete={reset}
+                    // renderer={renderer}
+                >
+                    <Completionist/>
+                </Countdown>
+            )}
         </div>
     );
 }
 
 class Index extends Component<any, IState> {
-    buttonPressTimer: any;
-
     constructor(props: any) {
         super(props);
-        this.buttonPressTimer = undefined;
         const {items = [], filenames = []} = getItems(getSubs());
         const {voice, rate = 1, volume = 1, pitch = 1} = getSettings();
         this.state = {
@@ -306,12 +359,6 @@ class Index extends Component<any, IState> {
         }
     };
 
-    handleButtonRelease = () => {
-        if (this.buttonPressTimer) {
-            clearTimeout(this.buttonPressTimer);
-        }
-    };
-
     componentDidMount() {
         const s = Storage.get(SCROLL_VAR, false);
         testLoadVoices();
@@ -343,9 +390,7 @@ class Index extends Component<any, IState> {
         return (
             <div
                 key={`${str}${index}`}
-                onTouchEnd={this.handleButtonRelease}
                 onMouseDown={this.show}
-                onMouseUp={this.handleButtonRelease}
                 data-ind={index}
             >
                 <div data-ind={index}>

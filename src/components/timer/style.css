@@ -151,6 +151,7 @@ button.folder-icon, button.folder-fill-icon {
     word-break: break-word;
     overflow: auto;
 }
+
 .lang-items > div:not(.alert):not(.modal-window) .tooltiptext {
     float: right;
 }
@@ -176,10 +177,12 @@ button.add-icon {
 button.del-icon {
     right: 100px;
 }
+
 .modal-window > div > div {
     height: 65vh;
     overflow-y: auto;
 }
+
 @media (max-height: 500px) {
     .modal-window > div > div {
         height: 46vh;
@@ -344,3 +347,59 @@ label {
     font-weight: bold;
 }
 
+table, th, td {
+    border-collase: collapse;
+    padding: 5px;
+    text-align: left;
+}
+
+th {
+    text-transform: uppercase;
+    background-color: #3b3b3b;
+    color: #fff;
+    font-family: open sans, sans-serif;
+}
+
+input[type="button"] {
+    background-color: #ff7700;
+    color: #fff;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    padding: 5px;
+}
+
+#marketTimerTable {
+    width: 100%;
+    border-bottom: 1px solid black;
+}
+
+.times {
+    display: flex;
+    justify-content: space-between;
+}
+
+.times > div {
+    background-image: url("./favicon.png");
+    background-repeat: no-repeat;
+    /*width: 20%;*/
+    /*padding: 10px;*/
+    background-color: #fff;
+    background-position: 8px 50%;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill,
+    minmax(200px, 1fr));
+    grid-gap: 10px;
+}
+
+.grid > div {
+    font-size: 20px;
+    padding: 1rem;
+    /*color: yellow;*/
+    text-align: center;
+    /*background: red;*/
+}
