@@ -47,7 +47,6 @@ const m = new Date().getMinutes();
 Array.from({length: 59}).map((_, idx) => {
     let min: string | number = idx + 1;
     if (min <= 9) {
-        console.log(idx, typeof idx);
         min = `0${min}`;
     }
     minDemoData.push({id: `${idx + 1}`, value: `${min}`})
@@ -77,6 +76,7 @@ const MyApp = () => {
     const [countDown, setCountDown] = useState(countD);
     const [curDemoData, setDemoData] = useState(initDemoData);
     const reset = (cb?: () => void | number) => {
+        // console.log(cb);
         if (typeof cb === "number") {
             if (cb === 1) {
                 setCountDown(0);
@@ -144,11 +144,13 @@ const MyApp = () => {
         <div className="App1">
             <div className="grid times">
                 <a className="btn" href="/timer?timer=3" onClick={setTimer} data-time="3">3 sec</a>
+                <a className="btn" href="/timer?timer=30" onClick={setTimer} data-time="30">30 sec</a>
                 <a className="btn" href="/timer?timer=600" onClick={setTimer} data-time="600">10 min</a>
                 <a className="btn" href="/timer?timer=1200" onClick={setTimer} data-time="1200">20 min</a>
                 <a className="btn" href="/timer?timer=1800" onClick={setTimer} data-time="1800">30 min</a>
                 <a className="btn" href="/timer?timer=3600" onClick={setTimer} data-time="3600">1 hour</a>
                 <a className="btn" href="/timer?timer=4800" onClick={setTimer} data-time="4800">1 hour 20 min</a>
+                <a className="btn" href="/timer?timer=86460" onClick={setTimer} data-time="86460">1 day 1 min</a>
             </div>
             <br/>
             <MSComponent config={config}/>
@@ -157,7 +159,7 @@ const MyApp = () => {
                     <br/>
                     <div className="App">
                         <UrgeWithPleasureComponent
-                            t={countDown}
+                            countDown={countDown}
                             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                             // @ts-ignore
                             reset={reset}

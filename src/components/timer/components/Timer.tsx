@@ -26,7 +26,7 @@ const getTimeHours = (time: number) => ((time % daySeconds) / hourSeconds) | 0;
 const getTimeDays = (time: number) => (time / daySeconds) | 0;
 
 interface Props {
-    t: number;
+    countDown: number;
     isNotifyOn: boolean;
     reset: (type?: number) => void
     playSound: () => void
@@ -34,9 +34,9 @@ interface Props {
 
 let notificationOne: Notification;
 
-const UrgeWithPleasureComponent = ({t, reset, isNotifyOn, playSound}: Props) => {
+const UrgeWithPleasureComponent = ({countDown, reset, isNotifyOn, playSound}: Props) => {
     const startTime = Date.now() / 1000; // use UNIX timestamp in seconds
-    const endTime = startTime + t; // use UNIX timestamp in seconds
+    const endTime = startTime + countDown; // use UNIX timestamp in seconds
 
     useEffect(() => {
         if (notificationOne) {
@@ -53,21 +53,23 @@ const UrgeWithPleasureComponent = ({t, reset, isNotifyOn, playSound}: Props) => 
                 notificationOne.close();
             }
         }
-    }, [t]);
+    }, [countDown]);
 
     const remainingTime = endTime - startTime;
     const days = Math.ceil(remainingTime / daySeconds);
     const daysDuration = days * daySeconds;
     timerProps.size = 80;
-    const dd = !!getTimeDays(daysDuration - remainingTime);
-    const isShowHours = t / 60 / 60 > 1;
+    // const dd = !!getTimeDays(daysDuration - remainingTime);
+    const dd = countDown / 60 / 60 / 24 > 1;
+    const isShowHours = countDown / 60 / 60 > 1;
+    const isShowMinutes = countDown / 60 > 1;
 
     return (
         <>
             {dd && (
                 <CountdownCircleTimer
                     {...timerProps}
-                    key={`d${t}`}
+                    key={`d${countDown}`}
                     colors="#7E2E84"
                     duration={daysDuration}
                     initialRemainingTime={remainingTime}
@@ -82,7 +84,7 @@ const UrgeWithPleasureComponent = ({t, reset, isNotifyOn, playSound}: Props) => 
             {isShowHours && (
                 <CountdownCircleTimer
                     {...timerProps}
-                    key={`h${t}`}
+                    key={`h${countDown}`}
                     colors="#D14081"
                     duration={daySeconds}
                     initialRemainingTime={remainingTime % daySeconds}
@@ -97,30 +99,32 @@ const UrgeWithPleasureComponent = ({t, reset, isNotifyOn, playSound}: Props) => 
                     )}
                 </CountdownCircleTimer>
             )}
-            <CountdownCircleTimer
-                {...timerProps}
-                key={`m${t}`}
-                colors="#EF798A"
-                duration={hourSeconds}
-                initialRemainingTime={remainingTime % hourSeconds}
-                onComplete={(totalElapsedTime) => ({
-                    shouldRepeat: remainingTime - totalElapsedTime > minuteSeconds,
-                })}
-            >
-                {({elapsedTime, color}) => (
-                    <span style={{color}}>
+            {isShowMinutes && (
+                <CountdownCircleTimer
+                    {...timerProps}
+                    key={`m${countDown}`}
+                    colors="#EF798A"
+                    duration={hourSeconds}
+                    initialRemainingTime={remainingTime % hourSeconds}
+                    onComplete={(totalElapsedTime) => ({
+                        shouldRepeat: remainingTime - totalElapsedTime > minuteSeconds,
+                    })}
+                >
+                    {({elapsedTime, color}) => (
+                        <span style={{color}}>
                         {renderTime("minutes", getTimeMinutes(hourSeconds - elapsedTime))}
                     </span>
-                )}
-            </CountdownCircleTimer>
+                    )}
+                </CountdownCircleTimer>
+            )}
             <CountdownCircleTimer
                 {...timerProps}
-                key={`s${t}`}
+                key={`s${countDown}`}
                 colors="#218380"
-                updateInterval={2}
+                // updateInterval={2}
                 onUpdate={(rrr) => {
                     let tt: string[] | number = document.title.split('Timer ');
-                    tt = t - (60 - rrr);
+                    tt = countDown - (60 - rrr);
                     const hour = Math.floor(+tt / 60);
                     if (hour > 0) {
                         const d = `${hour}:${+tt % 60}`;
