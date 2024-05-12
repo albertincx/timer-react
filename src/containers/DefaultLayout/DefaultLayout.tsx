@@ -9,8 +9,16 @@ const AppLoadable = Loadable(() => import('../../components/timer'));
 
 const sbWidth = Storage.get('sbWidth', '');
 
-class DefaultLayout extends Component<any, any> {
-    constructor(props: any) {
+interface Props {
+    someProp?: string
+}
+
+interface State {
+    sbWidth: string;
+}
+
+class DefaultLayout extends Component<Props, State> {
+    constructor(props: Props) {
         super(props);
         this.state = {sbWidth};
     }

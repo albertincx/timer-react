@@ -1,6 +1,5 @@
 import React from 'react'
 
-// @ts-ignore
 import {useRegisterSW} from 'virtual:pwa-register/react'
 
 function ReloadPrompt() {
@@ -9,12 +8,12 @@ function ReloadPrompt() {
     // replaced dyanmicaly
     const reloadSW = '__RELOAD_SW__'
 
-    let {
+    const {
         offlineReady: [offlineReady, setOfflineReady],
         needRefresh: [needRefresh, setNeedRefresh],
         updateServiceWorker,
     } = useRegisterSW({
-        onRegisteredSW(swUrl: string, r: any) {
+        onRegisteredSW(swUrl: string, r: ServiceWorkerRegistration | undefined) {
             // console.log(`Service Worker at: ${swUrl}`)
             // @ts-expect-error just ignore
             if (reloadSW === 'true') {
@@ -22,12 +21,9 @@ function ReloadPrompt() {
                     console.log('Checking for sw update')
                     r.update()
                 }, 20000 /* 20s for testing purposes */)
-            } else {
-                // eslint-disable-next-line prefer-template
-                // console.log('SW Registered: ' + r)
             }
         },
-        onRegisterError(error: any) {
+        onRegisterError(error) {
             console.log('SW registration error', error)
         },
     })
@@ -37,43 +33,7 @@ function ReloadPrompt() {
         setNeedRefresh(false)
     }
 
-    // needRefresh = true;
-    // return (
-    //     <div className="ReloadPrompt-container">
-    //         {(offlineReady || needRefresh)
-    //             && (
-    //                 <div className="ReloadPrompt-toast">
-    //                     <div className="ReloadPrompt-message">
-    //                         {offlineReady
-    //                             ? <span>App ready to work offline</span>
-    //                             : <span>New content available, click on reload button to update.</span>}
-    //                     </div>
-    //                     {needRefresh && <button className="ReloadPrompt-toast-button"
-    //                                             onClick={() => updateServiceWorker(true)}>Reload</button>}
-    //                     <button className="ReloadPrompt-toast-button" onClick={() => close()}>Close</button>
-    //                 </div>
-    //             )}
-    //         <div className="ReloadPrompt-date">{buildDate}</div>
-    //     </div>
-    // )
-    return (
-        <div className="ReloadPrompt-container">
-            {(offlineReady || needRefresh)
-                && (
-                    <div className="ReloadPrompt-toast">
-                        <div className="ReloadPrompt-message">
-                            {offlineReady
-                                ? <span>App ready to work offline</span>
-                                : <span>New content available, click on reload button to update.</span>}
-                        </div>
-                        {needRefresh && <button className="ReloadPrompt-toast-button"
-                                                onClick={() => updateServiceWorker(true)}>Reload</button>}
-                        <button className="ReloadPrompt-toast-button" onClick={() => close()}>Close</button>
-                    </div>
-                )}
-            <div className="ReloadPrompt-date">{buildDate}</div>
-        </div>
-    )
+    return null;
 }
 
 export default ReloadPrompt

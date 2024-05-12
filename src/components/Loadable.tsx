@@ -13,15 +13,17 @@ const Loader = () => {
     )
 };
 
-const loadable = (lazyIndex: any) => {
-    const Lc = lazy(lazyIndex);
+type LazyType = () => Promise<{default: React.FunctionComponent | React.ComponentClass}>;
 
-    return (props: any) => (
+const loadable = (lazyIndex: LazyType) => {
+    const Lc = lazy(lazyIndex);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    return (props) => (
         <Suspense fallback={<Loader />}>
-            {/* eslint-disable-next-line react/jsx-props-no-spreading */}
             <Lc {...props} />
         </Suspense>
     );
 };
 
-export default (lazyIndex: any) => loadable(lazyIndex);
+export default (lazyIndex: LazyType) => loadable(lazyIndex);

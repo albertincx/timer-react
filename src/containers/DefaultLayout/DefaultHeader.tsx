@@ -1,8 +1,8 @@
-import React from 'react';
+import React, {SyntheticEvent} from 'react';
 
 const DefaultHeader = () => {
     const [showPopup, setPopup] = React.useState(false)
-    const togglePopup = (e: any, show = true) => {
+    const togglePopup = (e: SyntheticEvent, show = true) => {
         e.preventDefault();
         setPopup(show);
     };

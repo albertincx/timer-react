@@ -247,10 +247,6 @@ select.pages {
     width: 100% !important;
 }
 
-body:not(.sidebar-lg-show) .main {
-    margin-left: 0 !important;
-}
-
 .sidebar-minimized .sidebar {
     width: 50px !important;
 }
@@ -308,10 +304,6 @@ td div.remove-btn {
     z-index: 1019;
     width: 200px;
     height: calc(100vh - 55px);
-}
-
-.tmp-fix .main {
-    margin-left: 0 !important;
 }
 
 @media (min-width: 992px) {
@@ -1126,10 +1118,6 @@ th.number {
     .header-fixed .app-header {
         z-index: 1;
     }
-}
-
-.app-body.tmp-fix .main {
-    margin-left: 0 !important;
 }
 
 .app-body.tmp-fix .sidebar {

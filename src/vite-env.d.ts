@@ -1,3 +1,3 @@
 /// <reference types="vite/client" />
-declare var __BUILD__;
-declare var process;
+declare const __BUILD__;
+declare const process;

@@ -1,17 +1,10 @@
-import React, {useEffect, useState} from 'react';
-import {testLoadVoices} from "../utils";
-
-window.tryToCopyLines = () => {
-    if (typeof window.availableVoicesTxt === 'undefined') {
-        return;
-    }
-    navigator.clipboard.writeText(window.availableVoicesTxt);
-}
+import React, {SyntheticEvent, useState} from 'react';
+import {ISettings, IState} from "../types";
 
 type IProps = {
-    data: any;
-    togglePopup: any;
-    voiceSettingSave: any;
+    data: IState;
+    togglePopup: (e: SyntheticEvent, b?: boolean) => void;
+    voiceSettingSave: (s: ISettings, b?: boolean) => void;
 }
 
 const Settings: React.FC<IProps> = ({data, togglePopup, voiceSettingSave}) => {
@@ -20,23 +13,24 @@ const Settings: React.FC<IProps> = ({data, togglePopup, voiceSettingSave}) => {
         voice,
         volume,
         rate,
-        pitch
+        pitch,
     });
 
-    useEffect(() => {
-        testLoadVoices(voice);
-    }, []);
-
-    const voiceSettings = (e: any) => {
-        const {name, value} = e.target;
+    const voiceSettings = (e: SyntheticEvent<EventTarget>) => {
+        // If event target not an HTMLButtonElement, exit
+        if (!(e.target instanceof HTMLLinkElement)) {
+            return;
+        }
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
+        const {name, value} = e.target;
         setState((prevState) => ({
             ...prevState,
             [name]: value,
         }));
     };
 
-    const settingSave = (e: any) => {
+    const settingSave = (e: SyntheticEvent) => {
         if (!voice && !state.voice) {
             return;
         }
@@ -46,14 +40,14 @@ const Settings: React.FC<IProps> = ({data, togglePopup, voiceSettingSave}) => {
 
         return false
     };
-    const clearSettings = (e: any) => {
+    const clearSettings = (e: SyntheticEvent) => {
         voiceSettingSave({
             ...state,
             voice: '',
         }, true)
         togglePopup(e, false);
     };
-    console.log(state);
+
     return (
         <div>
             <div className='modal-window'>

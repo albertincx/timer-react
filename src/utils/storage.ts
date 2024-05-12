@@ -7,12 +7,12 @@ class Storage {
         return localStorage.removeItem(k);
     }
 
-    get(k: string, def: any = "") {
+    get(k: string, def: string = "") {
         return localStorage.getItem(k) || def;
     }
 
-    set(k: string, v: any) {
-        localStorage.setItem(k, v);
+    set(k: string, v: string | number) {
+        localStorage.setItem(k, `${v}`);
     }
 
     getJ(k: string) {
@@ -27,7 +27,7 @@ class Storage {
         return false;
     }
 
-    setJ(k: string, v: any) {
+    setJ(k: string, v: { voice: string; volume: number; rate: number; pitch: number }) {
         return this.set(k, JSON.stringify(v));
     }
 }
