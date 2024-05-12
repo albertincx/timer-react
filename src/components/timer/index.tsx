@@ -277,21 +277,6 @@ class Index extends Component<Props, IState> {
                         </div>
                     </div>
                 ) : null}
-                <div>
-                    <div className='buttons'>
-                        <button
-                            className='icon speech-voice-setting'
-                            onClick={this.voiceSetting}
-                        />
-                    </div>
-                </div>
-                {modal === POPUP_SETTINGS ? (
-                    <Settings
-                        data={this.state}
-                        togglePopup={this.togglePopup}
-                        voiceSettingSave={this.voiceSettingSave}
-                    />
-                ) : null}
                 <MyApp/>
             </div>
         );

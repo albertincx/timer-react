@@ -38,10 +38,6 @@ const DefaultHeader = () => {
                                 </a>
                             </p>
                             <p>
-                                <a className="icon google-play"
-                                   href="https://play.google.com/store/apps/details?id=io.safiullin.puzzle"/>
-                            </p>
-                            <p>
                                 <small>Last update time: {`${d.toDateString()} ${d.toLocaleTimeString()}`}</small>
                             </p>
                             <a

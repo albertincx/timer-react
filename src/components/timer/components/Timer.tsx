@@ -138,7 +138,8 @@ const UrgeWithPleasureComponent = ({countDown, reset, isNotifyOn, playSound}: Pr
                     if (!shouldRepeat) {
                         if (isNotifyOn) {
                             try {
-                                notificationOne = new Notification("Hi there!");
+                                notificationOne = new Notification("Hi there!", {data: {url: '/'}});
+                                //var notificationURL = event.notification.data.url;
                                 notificationOne.onclose = () => {
                                     reset(1)
                                 }
