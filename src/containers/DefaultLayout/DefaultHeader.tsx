@@ -29,12 +29,15 @@ const DefaultHeader = () => {
                         <h1>Greetings!</h1>
                         <div>
                             <div>This is an offline timer</div>
+                            <div>Code is open <a
+                                href="https://github.com/albertincx/timer-react">https://github.com/albertincx/timer-react</a>
+                            </div>
                             <p>
                                 <small>Support</small>
                             </p>
                             <p>
                                 <a href="https://safiullin.com" target="_blank">
-                                    About Me
+                                    My website
                                 </a>
                             </p>
                             <p>

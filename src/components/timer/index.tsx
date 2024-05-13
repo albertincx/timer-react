@@ -9,7 +9,7 @@ import UrgeWithPleasureComponent from './components/Timer';
 
 import {APP_SETTINGS, POPUP_DISCUSS, POPUP_SETTINGS, SCROLL_VAR} from './consts';
 
-import {getRandomMs, getSettings} from './utils';
+import {getRandomMs, getSettings, getTimeStr} from './utils';
 
 import {ISettings, IState} from './types';
 
@@ -45,10 +45,7 @@ const h = new Date().getHours();
 const m = new Date().getMinutes();
 
 Array.from({length: 59}).map((_, idx) => {
-    let min: string | number = idx + 1;
-    if (min <= 9) {
-        min = `0${min}`;
-    }
+    let min: string | number = getTimeStr(idx + 1);
     minDemoData.push({id: `${idx + 1}`, value: `${min}`})
 })
 
@@ -75,6 +72,7 @@ const initDemoData = [...demoData];
 const MyApp = () => {
     const [countDown, setCountDown] = useState(countD);
     const [curDemoData, setDemoData] = useState(initDemoData);
+
     const reset = (cb?: () => void | number) => {
         // console.log(cb);
         if (typeof cb === "number") {
@@ -86,6 +84,7 @@ const MyApp = () => {
         }
         setCountDown(0);
         stopSound();
+        document.title = 'Timer'
         window.history.pushState(null, document.title, '/');
         if (cb instanceof Function) {
             cb()
@@ -151,13 +150,14 @@ const MyApp = () => {
                 <a className="btn" href="/timer?timer=3600" onClick={setTimer} data-time="3600">1 hour</a>
                 <a className="btn" href="/timer?timer=4800" onClick={setTimer} data-time="4800">1 hour 20 min</a>
                 <a className="btn" href="/timer?timer=86460" onClick={setTimer} data-time="86460">1 day 1 min</a>
+                <a className="btn" href="/timer?timer=86404" onClick={setTimer} data-time="86404">1 day 4 sec</a>
             </div>
             <br/>
             <MSComponent config={config}/>
             {!!countDown && (
                 <>
                     <br/>
-                    <div className="App">
+                    <div className="App2">
                         <UrgeWithPleasureComponent
                             countDown={countDown}
                             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
