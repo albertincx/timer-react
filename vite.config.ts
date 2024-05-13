@@ -16,6 +16,10 @@ export default ({mode}) => {
         plugins: [
             react(),
             VitePWA({
+                devOptions: {
+                    enabled: true,
+                    type: 'module',
+                },
                 registerType: 'autoUpdate',
                 includeAssets: [faviconURL],
                 manifest: {
