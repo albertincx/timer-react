@@ -295,3 +295,48 @@ label {
     background-repeat: no-repeat;
     padding-left: 40px;
 }
+
+
+
+.timer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: monospace;
+    font-size: 48px;
+}
+
+.timer-display {
+    display: flex;
+}
+
+.days,
+.hours,
+.minutes,
+.seconds {
+    background-color: #333;
+    color: #fff;
+    padding: 10px 15px;
+}
+
+.colon {
+    padding: 10px;
+    color: #333;
+}
+
+/* Animation styles */
+@keyframes countdown {
+    0% {
+        background-color: #333;
+    }
+    50% {
+        background-color: #f44336;
+    }
+    100% {
+        background-color: #333;
+    }
+}
+
+.countdown {
+    animation: countdown 1s infinite;
+}

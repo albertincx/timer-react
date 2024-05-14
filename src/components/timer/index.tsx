@@ -1,4 +1,4 @@
-import React, {Component, useState} from 'react';
+import React, {Component, useEffect, useState} from 'react';
 import {CascadeData} from 'mobile-select';
 
 import Storage from '../../utils/storage';
@@ -64,6 +64,8 @@ const url: string[] = location.href.split('timer=');
 if (url[1]) {
     countD = +url[1];
     document.title = `${TIMER_TITLE}${countD}`
+    // @ts-ignore
+    window.safTimerBtn(+countD);
 }
 
 const initDemoData = [...demoData];
@@ -71,7 +73,19 @@ const initDemoData = [...demoData];
 const MyApp = () => {
     const [countDown, setCountDown] = useState(countD);
     const [curDemoData] = useState(initDemoData);
-
+    useEffect(() => {
+        // Set up event handler to produce text for the window focus event
+        window.addEventListener("focus", function(event)
+        {
+            console.log('focus', countDown);
+            // document.getElementById('message').innerHTML = "window has focus " + nCounter;
+            // nCounter = nCounter + 1;
+            // @ts-ignore
+            if (window.timerNotificationOne) {
+                reset();
+            }
+        }, false);
+    }, []);
     const reset = (cb?: () => void | number) => {
         if (typeof cb === "number") {
             if (cb === 1) {
@@ -108,6 +122,8 @@ const MyApp = () => {
                 if (diffInSec) {
                     reset(() => {
                         setCountDown(diffInSec);
+                        // @ts-ignore
+                        window.safTimerBtn(+diffInSec);
                     });
                 }
             }
@@ -127,6 +143,8 @@ const MyApp = () => {
                 window.history.pushState('time', '', '/time?timer=' + tm);
                 document.title = `${TIMER_TITLE}${tm}`
                 setCountDown(+tm + getRandomMs());
+                // @ts-ignore
+                window.safTimerBtn(+tm + getRandomMs());
             })
         }
 
@@ -134,37 +152,57 @@ const MyApp = () => {
     }
 
     const handleReset = (_: React.SyntheticEvent<EventTarget>) => {
+        // @ts-ignore
+        window.safTimerResetBtn()
         reset();
     }
 
     return (
         <div className="App1">
             <div className="grid times">
-                <a className="btn" href="/timer?timer=3" onClick={setTimer} data-time="3">3 sec</a>
-                <a className="btn" href="/timer?timer=30" onClick={setTimer} data-time="30">30 sec</a>
-                <a className="btn" href="/timer?timer=600" onClick={setTimer} data-time="600">10 min</a>
-                <a className="btn" href="/timer?timer=1200" onClick={setTimer} data-time="1200">20 min</a>
-                <a className="btn" href="/timer?timer=1800" onClick={setTimer} data-time="1800">30 min</a>
-                <a className="btn" href="/timer?timer=3600" onClick={setTimer} data-time="3600">1 hour</a>
-                <a className="btn" href="/timer?timer=4800" onClick={setTimer} data-time="4800">1 hour 20 min</a>
-                <a className="btn" href="/timer?timer=86460" onClick={setTimer} data-time="86460">1 day 1 min</a>
-                <a className="btn" href="/timer?timer=90060" onClick={setTimer} data-time="90060">1 d 1h 1 m</a>
-                <a className="btn" href="/timer?timer=86404" onClick={setTimer} data-time="86404">1 day 4 sec</a>
+                <a className="btn" href="/src/timer?timer=3" onClick={setTimer} data-time="3">3 sec</a>
+                <a className="btn" href="/src/timer?timer=30" onClick={setTimer} data-time="30">30 sec</a>
+                <a className="btn" href="/src/timer?timer=600" onClick={setTimer} data-time="600">10 min</a>
+                <a className="btn" href="/src/timer?timer=1200" onClick={setTimer} data-time="1200">20 min</a>
+                <a className="btn" href="/src/timer?timer=1800" onClick={setTimer} data-time="1800">30 min</a>
+                <a className="btn" href="/src/timer?timer=3600" onClick={setTimer} data-time="3600">1 hour</a>
+                <a className="btn" href="/src/timer?timer=4800" onClick={setTimer} data-time="4800">1 hour 20 min</a>
+                <a className="btn" href="/src/timer?timer=5600" onClick={setTimer} data-time="5600">1 hour 30 min</a>
             </div>
             <br/>
             <MSComponent config={config}/>
-            {!!countDown && (
+            {!!countDown && false && (
                 <>
                     <br/>
                     <div className="App2">
-                        <UrgeWithPleasureComponent
-                            countDown={countDown}
-                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                            // @ts-ignore
-                            reset={reset}
-                            isNotifyOn={isNotifyOn}
-                            playSound={playSound}
-                        />
+                        {/*<UrgeWithPleasureComponent*/}
+                        {/*    countDown={countDown}*/}
+                        {/*    // eslint-disable-next-line @typescript-eslint/ban-ts-comment*/}
+                        {/*    // @ts-ignore*/}
+                        {/*    reset={reset}*/}
+                        {/*    isNotifyOn={isNotifyOn}*/}
+                        {/*    playSound={playSound}*/}
+                        {/*/>*/}
+                    </div>
+                    <br/>
+                    <button className="stop-timer btn" onClick={handleReset}>Stop timer!</button>
+                </>
+            )}
+            {!!countDown && (
+                <>
+                    {/*<div id="hours"></div>*/}
+                    {/*<div id="minutes"></div>*/}
+                    {/*<div id="seconds"></div>*/}
+                    <br/>
+                    <div id="time"></div>
+                    <div className="timer">
+                        <div className="timer-display">
+                            <span className="hours" id="hhour" style={{display: 'none'}}></span>
+                            <span className="colon" id="hhourSep" style={{display: 'none'}}>:</span>
+                            <span className="minutes" id="mmin">05</span>
+                            <span className="colon">:</span>
+                            <span className="seconds" id="ssec">00</span>
+                        </div>
                     </div>
                     <br/>
                     <button className="stop-timer btn" onClick={handleReset}>Stop timer!</button>

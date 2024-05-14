@@ -35,7 +35,8 @@ interface Props {
 }
 
 let notificationOne: Notification;
-
+// @ts-ignore
+window.timerNotificationOne = notificationOne;
 const UrgeWithPleasureComponent = ({countDown, reset, isNotifyOn, playSound}: Props) => {
     const startTime = Date.now() / 1000; // use UNIX timestamp in seconds
     const countDownNum = floorTime(countDown, 0);
@@ -137,9 +138,10 @@ const UrgeWithPleasureComponent = ({countDown, reset, isNotifyOn, playSound}: Pr
                                     notificationOne.onclick = reset
                                 } catch (e) {
                                     navigator.serviceWorker.ready.then(function (registration) {
-                                        registration.showNotification("Offline timer!", {
+                                        const d = registration.showNotification("Offline timer!", {
                                             body: "TIMER EXPIRED!",
                                         });
+                                        console.log(d);
                                     });
                                 }
                             }
