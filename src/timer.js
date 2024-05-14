@@ -20,11 +20,19 @@ function showRemaining(timeSec) {
     let seconds = Math.floor((distance % (1000 * 60)) / 1000);
     const formattedHours = hours ? getTimeStr(hours) : '';
     const formattedTime = `${getTimeStr(minutes)}:${getTimeStr(seconds)}`;
-
-    formattedHours && updateTimerHtml(formattedHours,'hhour')
+    const hEl = document.getElementById('hhour');
+    const hElSep = document.getElementById('hhourSep');
+    if (formattedHours) {
+        hEl && (hEl.style.display = 'block');
+        hElSep && (hElSep.style.display = 'block');
+    } else {
+        hEl && (hEl.style.display = 'none');
+        hElSep && (hElSep.style.display = 'none');
+    }
+    updateTimerHtml(formattedHours,'hhour')
     updateTimerHtml(getTimeStr(minutes),'mmin')
     updateTimerHtml(getTimeStr(seconds),'ssec')
-
+    console.log(formattedHours);
     return `${formattedHours}${showSep(hours)}${formattedTime}`;
 }
 const storage = window.localStorage; //Reference to the html5 localstorage.

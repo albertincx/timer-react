@@ -167,7 +167,7 @@ const MyApp = () => {
                 <a className="btn" href="/src/timer?timer=1800" onClick={setTimer} data-time="1800">30 min</a>
                 <a className="btn" href="/src/timer?timer=3600" onClick={setTimer} data-time="3600">1 hour</a>
                 <a className="btn" href="/src/timer?timer=4800" onClick={setTimer} data-time="4800">1 hour 20 min</a>
-                <a className="btn" href="/src/timer?timer=5600" onClick={setTimer} data-time="5600">1 hour 30 min</a>
+                <a className="btn" href="/src/timer?timer=5400" onClick={setTimer} data-time="5400">1 hour 30 min</a>
             </div>
             <br/>
             <MSComponent config={config}/>
@@ -199,9 +199,9 @@ const MyApp = () => {
                         <div className="timer-display">
                             <span className="hours" id="hhour" style={{display: 'none'}}></span>
                             <span className="colon" id="hhourSep" style={{display: 'none'}}>:</span>
-                            <span className="minutes" id="mmin">05</span>
+                            <span className="minutes" id="mmin"></span>
                             <span className="colon">:</span>
-                            <span className="seconds" id="ssec">00</span>
+                            <span className="seconds" id="ssec"></span>
                         </div>
                     </div>
                     <br/>
