@@ -4,10 +4,9 @@ import {CascadeData} from 'mobile-select';
 import Storage from '../../utils/storage';
 
 import MSComponent from './components/Ms';
-import Settings from './components/Settings';
 import UrgeWithPleasureComponent from './components/Timer';
 
-import {APP_SETTINGS, POPUP_DISCUSS, POPUP_SETTINGS, SCROLL_VAR} from './consts';
+import {APP_SETTINGS, POPUP_DISCUSS, POPUP_SETTINGS, SCROLL_VAR, TIMER_TITLE} from './consts';
 
 import {getRandomMs, getSettings, getTimeStr} from './utils';
 
@@ -64,17 +63,16 @@ const url: string[] = location.href.split('timer=');
 
 if (url[1]) {
     countD = +url[1];
-    document.title = `Timer ${countD}`
+    document.title = `${TIMER_TITLE}${countD}`
 }
 
 const initDemoData = [...demoData];
 
 const MyApp = () => {
     const [countDown, setCountDown] = useState(countD);
-    const [curDemoData, setDemoData] = useState(initDemoData);
+    const [curDemoData] = useState(initDemoData);
 
     const reset = (cb?: () => void | number) => {
-        // console.log(cb);
         if (typeof cb === "number") {
             if (cb === 1) {
                 setCountDown(0);
@@ -127,7 +125,7 @@ const MyApp = () => {
         if (tm) {
             reset(() => {
                 window.history.pushState('time', '', '/time?timer=' + tm);
-                document.title = `Timer ${tm}`
+                document.title = `${TIMER_TITLE}${tm}`
                 setCountDown(+tm + getRandomMs());
             })
         }
@@ -150,6 +148,7 @@ const MyApp = () => {
                 <a className="btn" href="/timer?timer=3600" onClick={setTimer} data-time="3600">1 hour</a>
                 <a className="btn" href="/timer?timer=4800" onClick={setTimer} data-time="4800">1 hour 20 min</a>
                 <a className="btn" href="/timer?timer=86460" onClick={setTimer} data-time="86460">1 day 1 min</a>
+                <a className="btn" href="/timer?timer=90060" onClick={setTimer} data-time="90060">1 d 1h 1 m</a>
                 <a className="btn" href="/timer?timer=86404" onClick={setTimer} data-time="86404">1 day 4 sec</a>
             </div>
             <br/>
@@ -182,19 +181,7 @@ interface Props {
 class Index extends Component<Props, IState> {
     constructor(props: Props) {
         super(props);
-        const {voice, rate = 1, volume = 1, pitch = 1} = getSettings();
-        this.state = {
-            showStr: '',
-            ind: 0,
-            isShown: -1,
-            error: '',
-            showPopupFiles: false,
-            modal: '',
-            voice,
-            rate,
-            volume,
-            pitch,
-        };
+        this.state = {modal: ''};
     }
 
     componentDidMount() {
@@ -213,9 +200,9 @@ class Index extends Component<Props, IState> {
         Storage.set(SCROLL_VAR, window.scrollY);
     };
 
-    togglePopup = (e: React.SyntheticEvent, s: boolean = true) => {
+    togglePopup = (e: React.SyntheticEvent) => {
         e.preventDefault();
-        this.setState({showPopupFiles: s, modal: ''});
+        this.setState({modal: ''});
     };
 
     closeModal = () => {
@@ -228,23 +215,16 @@ class Index extends Component<Props, IState> {
     };
 
     voiceSettingSave = (newSettings: ISettings, force = false) => {
-        const {voice, rate, pitch, volume} = newSettings;
+        const {} = newSettings;
         if (force) {
             //
         } else {
-            if (this.state.voice === voice || (!voice && this.state.voice)) {
-                return this.closeModal();
-            }
+            return this.closeModal();
         }
-        const oldSettings = getSettings();
-        Storage.setJ(APP_SETTINGS, {
-            ...oldSettings,
-            voice,
-            rate,
-            pitch,
-            volume,
-        });
-        this.setState({modal: '', voice, rate, pitch, volume});
+        const oldSettings = getSettings() || {};
+        // @ts-ignore
+        Storage.setJ(APP_SETTINGS, {...oldSettings});
+        this.setState({modal: ''});
     };
 
 
@@ -260,7 +240,7 @@ class Index extends Component<Props, IState> {
                                 href=''
                                 title='Close'
                                 className='modal-close'
-                                onClick={e => this.togglePopup(e, false)}
+                                onClick={this.togglePopup}
                             >
                                 Close
                             </a>
@@ -269,7 +249,7 @@ class Index extends Component<Props, IState> {
                                     href=''
                                     title='Close'
                                     className='modal-close bottom'
-                                    onClick={e => this.togglePopup(e, false)}
+                                    onClick={this.togglePopup}
                                 >
                                     Close
                                 </a>

@@ -12,17 +12,24 @@ export const getRandomMs = () => Math.random();
 
 export const getTimeStr = (t: number) => `${t < 10 ? `0${t}` : t}`;
 
-export const getHoursStr = (hour: number) => {
-    let str = getTimeStr(hour);
-    let h = floorTime(hour);
-    if (h > 0) {
-        if (h > 23) {
-            h = floorTime(h, 24)
-            str = `${h} days ${getTimeStr(floorTime(h / 24, 0))}:${getTimeStr(hour % 60)}`
-        } else {
-            str = `${h}:${getTimeStr(hour % 60)}`
-        }
-    }
+const showSep = (d: string | number) => d ? `:` : ''
 
-    return str;
+export function showRemaining(timeSec: number) {
+    if (timeSec < 0) {
+        return '';
+    }
+    let now = new Date().getTime();
+
+    const countDownDate = new Date().getTime() + (timeSec * 1000);
+    let distance = countDownDate - now;
+
+    let days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    const formattedDays = days ? getTimeStr(days) : '';
+    const formattedHours = days || hours ? getTimeStr(hours) : '';
+    const formattedTime = `${getTimeStr(minutes)}:${getTimeStr(seconds)}`;
+
+    return `${formattedDays}${showSep(days)}${formattedHours}${showSep(days || hours)}${formattedTime}`;
 }

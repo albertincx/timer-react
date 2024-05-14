@@ -8,13 +8,7 @@ type IProps = {
 }
 
 const Settings: React.FC<IProps> = ({data, togglePopup, voiceSettingSave}) => {
-    const {voice, error, volume, rate, pitch} = data;
-    const [state, setState] = useState({
-        voice,
-        volume,
-        rate,
-        pitch,
-    });
+    const [state, setState] = useState({});
 
     const voiceSettings = (e: SyntheticEvent<EventTarget>) => {
         // If event target not an HTMLButtonElement, exit
@@ -31,9 +25,6 @@ const Settings: React.FC<IProps> = ({data, togglePopup, voiceSettingSave}) => {
     };
 
     const settingSave = (e: SyntheticEvent) => {
-        if (!voice && !state.voice) {
-            return;
-        }
         voiceSettingSave(state);
 
         e.preventDefault();
@@ -41,10 +32,7 @@ const Settings: React.FC<IProps> = ({data, togglePopup, voiceSettingSave}) => {
         return false
     };
     const clearSettings = (e: SyntheticEvent) => {
-        voiceSettingSave({
-            ...state,
-            voice: '',
-        }, true)
+        voiceSettingSave({...state}, true)
         togglePopup(e, false);
     };
 
@@ -63,60 +51,9 @@ const Settings: React.FC<IProps> = ({data, togglePopup, voiceSettingSave}) => {
                     <h4>Web Speech Synthesis Demo</h4>
 
                     <div>
-                        <form onSubmit={() => false} id="settings-form" data-voice={voice}>
+                        <form onSubmit={() => false} id="settings-form">
                             <div id='page-wrapper'>
                                 <p id='msg'/>
-                                <div className='option'>
-                                    <label htmlFor='voice'>Voice</label>
-                                    {' '}
-                                    <select
-                                        required
-                                        name='voice'
-                                        id='voice'
-                                        value={state.voice || ''}
-                                        onChange={voiceSettings}
-                                    />
-                                </div>
-                                <div className='option'>
-                                    <label htmlFor='volume'>Volume</label>
-                                    <input
-                                        type='range'
-                                        min='0'
-                                        max='1'
-                                        step='0.1'
-                                        name='volume'
-                                        id='volume'
-                                        value={state.volume}
-                                        onChange={voiceSettings}
-                                    />
-                                </div>
-                                <div className='option'>
-                                    <label htmlFor='rate'>Rate</label>
-                                    <input
-                                        type='range'
-                                        min='0.1'
-                                        max='10'
-                                        step='0.1'
-                                        name='rate'
-                                        id='rate'
-                                        value={state.rate}
-                                        onChange={voiceSettings}
-                                    />
-                                </div>
-                                <div className='option'>
-                                    <label htmlFor='pitch'>Pitch</label>
-                                    <input
-                                        type='range'
-                                        min='0'
-                                        max='2'
-                                        step='0.1'
-                                        name='pitch'
-                                        id='pitch'
-                                        value={state.pitch}
-                                        onChange={voiceSettings}
-                                    />
-                                </div>
-                                {error ? <div color='red'>{error}</div> : null}
                                 <div className="btn-wrap">
                                     <button className='btn btn-primary' onClick={settingSave}>Save</button>
                                     &nbsp;&nbsp;

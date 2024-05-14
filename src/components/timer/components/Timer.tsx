@@ -1,6 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {CountdownCircleTimer} from 'react-countdown-circle-timer'
-import {floorTime, getHoursStr, getTimeStr} from "../utils";
+import {floorTime, showRemaining} from "../utils";
+import {TIMER_TITLE} from "../consts";
 
 const minuteSeconds = 60;
 const hourSeconds = 3600;
@@ -42,27 +43,23 @@ const UrgeWithPleasureComponent = ({countDown, reset, isNotifyOn, playSound}: Pr
     const endTime = startTime + countDownNum; // use UNIX timestamp in seconds
     // const [dTT, setDT] = useState('')
     useEffect(() => {
-        if (notificationOne) {
-            notificationOne.onclose = () => {
-                reset(2)
-            }
-            notificationOne.close();
-        }
-        return () => {
+        const umount = () => {
             if (notificationOne) {
                 notificationOne.onclose = () => {
                     reset(2)
                 }
                 notificationOne.close();
             }
-        }
+        };
+        umount();
+
+        return umount
     }, [countDown]);
 
     const remainingTime = endTime - startTime;
     const days = Math.ceil(remainingTime / daySeconds);
     const daysDuration = days * daySeconds;
     timerProps.size = 80;
-    // const dd = !!getTimeDays(daysDuration - remainingTime);
     const dd = countDownNum / 60 / 60 / 24 > 1;
     const isShowHours = countDownNum / 60 / 60 > 1;
     const isShowMinutes = countDownNum / 60 > 1;
@@ -134,11 +131,8 @@ const UrgeWithPleasureComponent = ({countDown, reset, isNotifyOn, playSound}: Pr
                             if (isNotifyOn) {
                                 try {
                                     notificationOne = new Notification("Offline timer!", {data: {url: '/'}});
-                                    //var notificationURL = event.notification.data.url;
-                                    notificationOne.onclose = () => {
-                                        reset(1)
-                                    }
-                                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                                    // @ts-ignore
+                                    notificationOne.onclose = reset
                                     // @ts-ignore
                                     notificationOne.onclick = reset
                                 } catch (e) {
@@ -153,24 +147,17 @@ const UrgeWithPleasureComponent = ({countDown, reset, isNotifyOn, playSound}: Pr
                         }
                         return {shouldRepeat}
                     }}
-                    onUpdate={(remainingTime) => {
-                        const rrr = remainingTime;
-                        // console.log(remainingTime);
-                        const secStr = rrr === 60 ? 0 : rrr;
-                        let tt: string[] | number = document.title.split('Timer ');
-                        tt = countDownNum > 60 ? countDownNum - (rrr === 60 || rrr === 0 ? 59 : rrr) : rrr;
-                        // console.log('countDownNum', tt, (60 - rrr), rrr, rrr === 0, rrr === 60);
-                        let dt: number | string = tt;
-                        const hour = floorTime(tt);
-                        // dt: string | number = hour;
-                        if (hour > 0) {
-                            const d = `${getHoursStr(hour)}:${getTimeStr(secStr)}`;
-                            dt = `(${d}) Timer ${tt}`;
-                        } else {
-                            dt = `(${60 - getTimeSeconds(rrr)}) Timer ${tt}`;
+                    onUpdate={() => {
+                        let elapsedTimeArr: string[] | number = document.title.split(TIMER_TITLE);
+                        let elapsedTime = countDownNum - 1;
+                        if (elapsedTimeArr[1]) {
+                            elapsedTime = +elapsedTimeArr[1]
+                            elapsedTime -= 1;
                         }
+                        const cnd = showRemaining(elapsedTime);
+                        const dt = `(${cnd}) ${TIMER_TITLE}${elapsedTime}`;
+
                         document.title = `${dt}`;
-                        // setDT(`${dt} + ${rrr}`)
                     }}
                 >
                     {({elapsedTime, color}) => (
