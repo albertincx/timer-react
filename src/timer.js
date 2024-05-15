@@ -6,6 +6,14 @@ let canUseNotifications = true;
 const getTimeStr = (t) => `${t < 10 ? `0${t}` : t}`;
 const showSep = (d) => d ? `:` : ''
 
+function getSecondsFromTime (h,m) {
+    console.log(h, m);
+    const d = new Date;
+    d.setTime(d.getTime() + (+h*60*60*1000) + (+m*60*1000));
+    // console.log(Date.now(), d.getTime());
+    return Date.now() - d.getTime()
+}
+
 function showRemaining(timeSec) {
     if (timeSec < 0) {
         return '';
@@ -109,7 +117,8 @@ let timer = new Timer(); //Create an instance of the Timer object.
 //Timer UI Events
 // $("#changeStateBtn").click(function () { timer.changeState(); });
 window.safTimerBtn = (s) => {
-    timer.changeState(s)
+    // console.log('seconds = ', s);
+    timer.changeState(Math.floor(s))
 };
 window.safTimerResetBtn = () => timer.reset();
 
@@ -154,10 +163,14 @@ function updateTimer(data) {
             }
             updateTimerHtml(data.value, 'seconds');
 
-            let elapsedTimeArr = document.title.split(TIMER_TITLE);
+            let [elapsedTime1, seconds] = document.title.split(TIMER_TITLE);
+            elapsedTime1 = elapsedTime1.replace(/[^0-9:]/g,'').split(':');
+            // const seconds2 = getSecondsFromTime(...elapsedTime1);
+            // console.log(elapsedTime1);
+            // console.log(seconds, seconds2);
             let elapsedTime = timer.countDown - 1;
-            if (elapsedTimeArr[1]) {
-                elapsedTime = +elapsedTimeArr[1]
+            if (seconds) {
+                elapsedTime = +seconds
                 elapsedTime -= 1;
             }
             const cnd = showRemaining(elapsedTime);
@@ -173,8 +186,8 @@ function updateTimer(data) {
 
             updateTimerHtml(data.value, 'minutes');
             reminderData.minutesPassed++;
-            console.log('MINU')
-            console.log(reminderData.minutesPassed)
+            // console.log('MINU')
+            // console.log(reminderData.minutesPassed)
             break;
         case 'hh':
             // timer.hhHtml.innerText = makeTimeString(data.value);
@@ -276,8 +289,10 @@ function Reminder() {
         const hours = this.hoursPassed === this.reminderInterval[0];
         this.minutesPassed = Math.floor(this.secPassed / 60);
         let minutes = false;
+        // console.log('to off = ', remMinutes)
 
-        remMinutes = remMinutes > 1 ? remMinutes * 60 : remMinutes * 100;
+        remMinutes = remMinutes >= 1 ? remMinutes * 60 : remMinutes * 100;
+        // console.log('to off = ', remMinutes)
 
         if (this.secPassed >= remMinutes) {
             minutes = true;
@@ -324,7 +339,7 @@ function startBackgroundProcess() {
             web_worker = new Worker("timer-worker.js");
         }
         web_worker.onmessage = function (event) {
-            console.log(event);
+            // console.log(event);
             updateTimer(event.data);
         };
     } else {
