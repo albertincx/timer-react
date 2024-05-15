@@ -6,6 +6,14 @@ let canUseNotifications = true;
 const getTimeStr = (t) => `${t < 10 ? `0${t}` : t}`;
 const showSep = (d) => d ? `:` : ''
 
+let isNotifyOn = false;
+
+if ('Notification' in window) {
+    Notification.requestPermission().then(function (permission) {
+        isNotifyOn = permission === 'granted';
+    });
+}
+
 function getSecondsFromTime(...args) {
     if (args.length < 2) return 0;
 
@@ -57,7 +65,6 @@ function showRemaining(timeSec) {
     updateTimerHtml(formattedHours, 'hhour')
     updateTimerHtml(getTimeStr(minutes), 'mmin')
     updateTimerHtml(getTimeStr(seconds), 'ssec')
-    console.log(formattedHours);
     return `${formattedHours}${showSep(hours)}${formattedTime}`;
 }
 
@@ -175,7 +182,6 @@ function updateTimer(data) {
                     docTitle = `(${cnd}) ${docTitle}`;
                 }
             } else {
-                console.log('elapsedTime1 = ', elapsedTime1);
                 let elapsedTime = timer.countDown - 1;
                 if (seconds) {
                     elapsedTime = +seconds
@@ -208,34 +214,30 @@ function updateTimer(data) {
         reminderData.minutesPassed = 0;
         reminderData.secPassed = 0;
 
-        if (canUseNotifications) {
-            if (Notification.permission !== "granted") {
-                Notification.requestPermission();
-            } else {
-                try {
-                    notificationOne = new Notification("Times up!",
-                        {
-                            icon: "icon-144x144.png",
-                            silent: true
-                        });
-                    notificationOne.onclose = () => {
-                        reminderData.stopSound()
-                        // notification.close();
-                    }
-                    notificationOne.onclick = () => {
-                        // reminderData.stopSound()
-                        notificationOne.close();
-                    }
-                } catch (e) {
-                    navigator.serviceWorker.ready.then(function (registration) {
-                        registration.showNotification("Times up!", {
-                            body: "TIMER EXPIRED!",
-                            data: {
-                                action: ['test'],
-                            }
-                        });
+        if (canUseNotifications && isNotifyOn) {
+            try {
+                notificationOne = new Notification("Times up!",
+                    {
+                        icon: "icon-144x144.png",
+                        silent: true
                     });
+                notificationOne.onclose = () => {
+                    reminderData.stopSound()
+                    // notification.close();
                 }
+                notificationOne.onclick = () => {
+                    // reminderData.stopSound()
+                    notificationOne.close();
+                }
+            } catch (e) {
+                navigator.serviceWorker.ready.then(function (registration) {
+                    registration.showNotification("Times up!", {
+                        body: "TIMER EXPIRED!",
+                        data: {
+                            action: ['test'],
+                        }
+                    });
+                });
             }
         }
     }
