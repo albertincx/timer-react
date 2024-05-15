@@ -101,7 +101,7 @@ const MyApp = () => {
 
         if (tm) {
             reset(() => {
-                window.history.pushState('time', '', '/time?timer=' + tm);
+                window.history.pushState('time', '', '#timer=' + tm);
                 document.title = `${TIMER_TITLE}${tm}`
                 setCountDown(+tm + getRandomMs());
                 // @ts-ignore
@@ -121,17 +121,17 @@ const MyApp = () => {
     return (
         <div className="App1">
             <div className="grid times">
-                <a className="btn" href="/timer?timer=3" onClick={setTimer} data-time="3">3 sec</a>
-                <a className="btn" href="/timer?timer=30" onClick={setTimer} data-time="30">30 sec</a>
-                <a className="btn" href="/timer?timer=60" onClick={setTimer} data-time="60">1 min</a>
-                <a className="btn" href="/timer?timer=120" onClick={setTimer} data-time="120">2 min</a>
-                <a className="btn" href="/timer?timer=300" onClick={setTimer} data-time="300">5 min</a>
-                <a className="btn" href="/timer?timer=600" onClick={setTimer} data-time="600">10 min</a>
-                <a className="btn" href="/timer?timer=1200" onClick={setTimer} data-time="1200">20 min</a>
-                <a className="btn" href="/timer?timer=1800" onClick={setTimer} data-time="1800">30 min</a>
-                <a className="btn" href="/timer?timer=3600" onClick={setTimer} data-time="3600">1 hour</a>
-                <a className="btn" href="/timer?timer=4800" onClick={setTimer} data-time="4800">1 hour 20 min</a>
-                <a className="btn" href="/timer?timer=5400" onClick={setTimer} data-time="5400">1 hour 30 min</a>
+                <a className="btn" href="/#timer=3" onClick={setTimer} data-time="3">3 sec</a>
+                <a className="btn" href="/#timer=30" onClick={setTimer} data-time="30">30 sec</a>
+                <a className="btn" href="/#timer=60" onClick={setTimer} data-time="60">1 min</a>
+                <a className="btn" href="/#timer=120" onClick={setTimer} data-time="120">2 min</a>
+                <a className="btn" href="/#timer=300" onClick={setTimer} data-time="300">5 min</a>
+                <a className="btn" href="/#timer=600" onClick={setTimer} data-time="600">10 min</a>
+                <a className="btn" href="/#timer=1200" onClick={setTimer} data-time="1200">20 min</a>
+                <a className="btn" href="/#timer=1800" onClick={setTimer} data-time="1800">30 min</a>
+                <a className="btn" href="/#timer=3600" onClick={setTimer} data-time="3600">1 hour</a>
+                <a className="btn" href="/#timer=4800" onClick={setTimer} data-time="4800">1 hour 20 min</a>
+                <a className="btn" href="/#timer=5400" onClick={setTimer} data-time="5400">1 hour 30 min</a>
             </div>
             <br/>
             <MSComponent config={config}/>
