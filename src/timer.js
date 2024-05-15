@@ -1,17 +1,34 @@
 "use strict"; //Forces strict JS syntax.
 
-const TIMER_TITLE = 'Timer -';
+const TIMER_TITLE = 'Timer';
 let canUseNotifications = true;
 
 const getTimeStr = (t) => `${t < 10 ? `0${t}` : t}`;
 const showSep = (d) => d ? `:` : ''
 
-function getSecondsFromTime (h,m) {
-    console.log(h, m);
+function getSecondsFromTime(...args) {
+    if (args.length < 2) return 0;
+
+    let [h, m, s] = args;
+    h = +h;
+    m = +m;
+
+    const withHours = args.length > 2;
+
+    if (withHours) {
+        s = +s;
+    } else {
+        let tmp = m;
+        m = h;
+        s = tmp
+    }
+    if (withHours) {
+        s += h * 60 * 60;
+    }
     const d = new Date;
-    d.setTime(d.getTime() + (+h*60*60*1000) + (+m*60*1000));
-    // console.log(Date.now(), d.getTime());
-    return Date.now() - d.getTime()
+    d.setTime(d.getTime() + (m * 60 * 60 * 1000) + (s * 60 * 1000));
+
+    return (d.getTime() - Date.now()) / 60 / 1000;
 }
 
 function showRemaining(timeSec) {
@@ -45,20 +62,11 @@ function showRemaining(timeSec) {
 }
 
 const storage = window.localStorage; //Reference to the html5 localstorage.
-/*-----------------------:UTIL FUNCTIONS-----------------------*/
-
-/*-----------------------:TIMER-----------------------*/
 
 /**The Timer object. It holds the html elements pertaining to the timer and whether the timer is enabled.
  * It contains functionality to pause/play the timer, and to reset the timer. The actual counting of the timer
  * itself is carried out within the "timer-worker" script as a web worker, communicating with the Timer object.*/
 function Timer() {
-    /**The hours section of the timer in HTML.*/
-    // this.hhHtml = document.getElementById('hh');
-    /**The minutes section of the timer in HTML.*/
-    // this.mmHtml = document.getElementById('mm');
-    /**The seconds section of the timer in HTML.*/
-    // this.ssHtml = document.getElementById('ss');
     this.countDown = 0;
     let isEnabled = false;
 
@@ -66,7 +74,7 @@ function Timer() {
      * call setAllStorage() to update the local storage timer values with the current values*/
     this.changeState = function (s) {
         this.countDown = s;
-
+        reminderData.stopSound();
         reminderData.hoursPassed = 0;
         reminderData.minutesPassed = 0;
         reminderData.secPassed = 0;
@@ -88,7 +96,7 @@ function Timer() {
             // $("#changeStateBtn").html("<i class='material-icons'>pause</i>");
         }
         /*Stops or starts the web worker timer counting depending on the state of this timer object*/
-        isEnabled = true
+        isEnabled = true;
         web_worker.postMessage(["state_change", isEnabled]);
 
         setAllStorage();
@@ -103,11 +111,6 @@ function Timer() {
         updateTimerHtml('00', 'hours');
         updateTimerHtml('00', 'minutes');
         updateTimerHtml('00', 'seconds');
-        // this.hhHtml.innerText = "00";
-        // this.mmHtml.innerText = "00";
-        // this.ssHtml.innerText = "00";
-        // isEnabled = false;
-
         setAllStorage();
     };
 }
@@ -115,11 +118,10 @@ function Timer() {
 let timer = new Timer(); //Create an instance of the Timer object.
 
 //Timer UI Events
-// $("#changeStateBtn").click(function () { timer.changeState(); });
 window.safTimerBtn = (s) => {
-    // console.log('seconds = ', s);
     timer.changeState(Math.floor(s))
 };
+
 window.safTimerResetBtn = () => timer.reset();
 
 function getTimerHtml(targ) {
@@ -132,7 +134,7 @@ function getTimerHtml(targ) {
 }
 
 let notificationOne;
-window.addEventListener("focus", function (event) {
+window.addEventListener("focus", function () {
     reminderData.stopSound();
     if (notificationOne) {
         notificationOne.close()
@@ -146,8 +148,6 @@ function updateTimerHtml(v, targ) {
     }
 }
 
-// $("#resetBtn").click(function () { timer.reset() });
-
 /**The function that takes the new values from the counted timer on the web worker and
  * updates the html. It also controls when a sound should be played to signal a reminder and
  * autosaves the timer in localstorage every 10 seconds.*/
@@ -156,7 +156,6 @@ function updateTimer(data) {
     data.type is either 'hh', 'mm' or 'ss' and the value is the corresponding updated value.*/
     switch (data.type) {
         case 'ss':
-            // timer.ssHtml.innerText = makeTimeString(data.value); //Set the html for seconds to the new data.value.
             /*If 10 seconds has passed, update the local storage*/
             if (data.value % 10 === 0) {
                 setAllStorage();
@@ -164,33 +163,37 @@ function updateTimer(data) {
             updateTimerHtml(data.value, 'seconds');
 
             let [elapsedTime1, seconds] = document.title.split(TIMER_TITLE);
-            elapsedTime1 = elapsedTime1.replace(/[^0-9:]/g,'').split(':');
-            // const seconds2 = getSecondsFromTime(...elapsedTime1);
-            // console.log(elapsedTime1);
-            // console.log(seconds, seconds2);
-            let elapsedTime = timer.countDown - 1;
-            if (seconds) {
-                elapsedTime = +seconds
-                elapsedTime -= 1;
-            }
-            const cnd = showRemaining(elapsedTime);
-            // updateTimerHtml(cnd, 'time')
-            const dt = cnd && elapsedTime > 0 ? `(${cnd}) ${TIMER_TITLE}${elapsedTime}` : 'Timer';
+            elapsedTime1 = elapsedTime1.replace(/[^0-9:]/g, '').split(':');
+            let seconds2 = getSecondsFromTime(...elapsedTime1);
 
-            document.title = `${dt}`;
+            let docTitle = TIMER_TITLE;
+
+            if (seconds2) {
+                seconds2 -= 1;
+                const cnd = showRemaining(seconds2);
+                if (cnd) {
+                    docTitle = `(${cnd}) ${docTitle}`;
+                }
+            } else {
+                console.log('elapsedTime1 = ', elapsedTime1);
+                let elapsedTime = timer.countDown - 1;
+                if (seconds) {
+                    elapsedTime = +seconds
+                    elapsedTime -= 1;
+                }
+                const cnd = showRemaining(elapsedTime);
+                docTitle = cnd && elapsedTime > 0 ? `(${cnd}) ${TIMER_TITLE}${elapsedTime}` : TIMER_TITLE;
+            }
+
+            document.title = `${docTitle}`;
 
             reminderData.secPassed++;
             break;
         case 'mm':
-            // timer.mmHtml.innerText = makeTimeString(data.value);
-
             updateTimerHtml(data.value, 'minutes');
             reminderData.minutesPassed++;
-            // console.log('MINU')
-            // console.log(reminderData.minutesPassed)
             break;
         case 'hh':
-            // timer.hhHtml.innerText = makeTimeString(data.value);
             updateTimerHtml(data.value, 'hours');
             reminderData.hoursPassed++;
             break;
@@ -210,11 +213,6 @@ function updateTimer(data) {
                 Notification.requestPermission();
             } else {
                 try {
-                    // notificationOne = new Notification("Offline timer!", {data: {url: '/'}});
-                    // @ts-ignore
-                    // notificationOne.onclose = reset
-                    // @ts-ignore
-                    // notificationOne.onclick = reset
                     notificationOne = new Notification("Times up!",
                         {
                             icon: "icon-144x144.png",
@@ -282,7 +280,6 @@ function Reminder() {
     /**If reminders are enabled and the hours and minutes passed is the same as
      * the set interval, return true.*/
     this.intervalHasPassed = function () {
-        // console.log('this.isReminderEnabled = ', this.isReminderEnabled)
         if (!this.isReminderEnabled) return false;
 
         let remMinutes = +parseFloat(this.reminderInterval[1]).toFixed(2);
@@ -292,7 +289,6 @@ function Reminder() {
         // console.log('to off = ', remMinutes)
 
         remMinutes = remMinutes >= 1 ? remMinutes * 60 : remMinutes * 100;
-        // console.log('to off = ', remMinutes)
 
         if (this.secPassed >= remMinutes) {
             minutes = true;
@@ -339,11 +335,8 @@ function startBackgroundProcess() {
             web_worker = new Worker("timer-worker.js");
         }
         web_worker.onmessage = function (event) {
-            // console.log(event);
             updateTimer(event.data);
         };
-    } else {
-        // window.alert("Browser not supported..");
     }
 }
 
@@ -374,10 +367,6 @@ function init() {
         updateTimerHtml(hh, 'hours')
         updateTimerHtml(mm, 'minutes')
         updateTimerHtml(ss, 'seconds')
-        //
-        // parseInt(timer.hhHtml.innerText),
-        //     parseInt(timer.mmHtml.innerText),
-        //     parseInt(timer.ssHtml.innerText)
         /*Tell the web worker to update it's values by the locally stored values parsed as integers.*/
         web_worker.postMessage([
             "update_from_storage",
@@ -388,7 +377,7 @@ function init() {
     }
 
     /**If the user closes the page in any shape or form, save the current timer values to local storage.*/
-    window.addEventListener("beforeunload", function (e) {
+    window.addEventListener("beforeunload", function () {
         setAllStorage();
         return null;
     });

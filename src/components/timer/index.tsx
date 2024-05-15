@@ -4,7 +4,6 @@ import {CascadeData} from 'mobile-select';
 import Storage from '../../utils/storage';
 
 import MSComponent from './components/Ms';
-import UrgeWithPleasureComponent from './components/Timer';
 
 import {APP_SETTINGS, POPUP_DISCUSS, POPUP_SETTINGS, SCROLL_VAR, TIMER_TITLE} from './consts';
 
@@ -13,28 +12,6 @@ import {getRandomMs, getSettings, getTimeStr} from './utils';
 import {ISettings, IState} from './types';
 
 import './style.css';
-import notifySound from "../../alarm-clock-short.mp3";
-
-let isNotifyOn = false;
-
-if ('Notification' in window) {
-    Notification.requestPermission().then(function (permission) {
-        isNotifyOn = permission === 'granted';
-    });
-}
-
-const sound = new Audio(notifySound)
-
-function playSound() {
-    sound.play().then(() => {
-        //
-    })
-}
-
-function stopSound() {
-    sound.pause();
-    sound.currentTime = 0;
-}
 
 const demoData: { id: string; value: string; childs: { id: string; value: string; }[]; }[] = [];
 
@@ -73,34 +50,18 @@ const initDemoData = [...demoData];
 const MyApp = () => {
     const [countDown, setCountDown] = useState(countD);
     const [curDemoData] = useState(initDemoData);
-    useEffect(() => {
-        // Set up event handler to produce text for the window focus event
-        window.addEventListener("focus", function(event)
-        {
-            console.log('focus', countDown);
-            // document.getElementById('message').innerHTML = "window has focus " + nCounter;
-            // nCounter = nCounter + 1;
-            // @ts-ignore
-            if (window.timerNotificationOne) {
-                reset();
-            }
-        }, false);
-    }, []);
+
     const reset = (cb?: () => void | number) => {
         if (typeof cb === "number") {
             if (cb === 1) {
                 setCountDown(0);
-                stopSound();
             }
             return;
         }
         setCountDown(0);
-        stopSound();
-        document.title = 'Timer'
+        document.title = TIMER_TITLE
         window.history.pushState(null, document.title, '/');
-        if (cb instanceof Function) {
-            cb()
-        }
+        if (cb instanceof Function) cb();
     }
 
     const config = {
@@ -174,30 +135,9 @@ const MyApp = () => {
             </div>
             <br/>
             <MSComponent config={config}/>
-            {!!countDown && false && (
-                <>
-                    <br/>
-                    <div className="App2">
-                        {/*<UrgeWithPleasureComponent*/}
-                        {/*    countDown={countDown}*/}
-                        {/*    // eslint-disable-next-line @typescript-eslint/ban-ts-comment*/}
-                        {/*    // @ts-ignore*/}
-                        {/*    reset={reset}*/}
-                        {/*    isNotifyOn={isNotifyOn}*/}
-                        {/*    playSound={playSound}*/}
-                        {/*/>*/}
-                    </div>
-                    <br/>
-                    <button className="stop-timer btn" onClick={handleReset}>Stop timer!</button>
-                </>
-            )}
             {!!countDown && (
                 <>
-                    {/*<div id="hours"></div>*/}
-                    {/*<div id="minutes"></div>*/}
-                    {/*<div id="seconds"></div>*/}
                     <br/>
-                    <div id="time"></div>
                     <div className="timer">
                         <div className="timer-display">
                             <span className="hours" id="hhour" style={{display: 'none'}}></span>
