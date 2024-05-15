@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "io.safiullin.timer",
+      "sha256_cert_fingerprints": [
+        "72:DB:63:BD:33:D3:7D:15:3F:B7:3F:5D:D3:A3:2D:8D:8E:C5:F2:43:E5:C0:64:10:59:AB:AF:65:91:25:1A:1C"
+      ]
+    }
+  }
+]
