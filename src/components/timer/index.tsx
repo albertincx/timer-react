@@ -162,6 +162,9 @@ const MyApp = () => {
             <div className="grid times">
                 <a className="btn" href="/src/timer?timer=3" onClick={setTimer} data-time="3">3 sec</a>
                 <a className="btn" href="/src/timer?timer=30" onClick={setTimer} data-time="30">30 sec</a>
+                <a className="btn" href="/src/timer?timer=60" onClick={setTimer} data-time="60">1 min</a>
+                <a className="btn" href="/src/timer?timer=120" onClick={setTimer} data-time="120">2 min</a>
+                <a className="btn" href="/src/timer?timer=300" onClick={setTimer} data-time="300">5 min</a>
                 <a className="btn" href="/src/timer?timer=600" onClick={setTimer} data-time="600">10 min</a>
                 <a className="btn" href="/src/timer?timer=1200" onClick={setTimer} data-time="1200">20 min</a>
                 <a className="btn" href="/src/timer?timer=1800" onClick={setTimer} data-time="1800">30 min</a>

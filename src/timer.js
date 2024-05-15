@@ -29,12 +29,13 @@ function showRemaining(timeSec) {
         hEl && (hEl.style.display = 'none');
         hElSep && (hElSep.style.display = 'none');
     }
-    updateTimerHtml(formattedHours,'hhour')
-    updateTimerHtml(getTimeStr(minutes),'mmin')
-    updateTimerHtml(getTimeStr(seconds),'ssec')
+    updateTimerHtml(formattedHours, 'hhour')
+    updateTimerHtml(getTimeStr(minutes), 'mmin')
+    updateTimerHtml(getTimeStr(seconds), 'ssec')
     console.log(formattedHours);
     return `${formattedHours}${showSep(hours)}${formattedTime}`;
 }
+
 const storage = window.localStorage; //Reference to the html5 localstorage.
 /*-----------------------:UTIL FUNCTIONS-----------------------*/
 
@@ -49,7 +50,7 @@ function Timer() {
     /**The minutes section of the timer in HTML.*/
     // this.mmHtml = document.getElementById('mm');
     /**The seconds section of the timer in HTML.*/
-        // this.ssHtml = document.getElementById('ss');
+    // this.ssHtml = document.getElementById('ss');
     this.countDown = 0;
     let isEnabled = false;
 
@@ -65,8 +66,8 @@ function Timer() {
             const hrs = s / 60 / 60;
             let mins = s / 60;
 
-            if (s<60) {
-                mins = s/100;
+            if (s < 60) {
+                mins = s / 100;
             }
             reminderData.setReminderInterval(hrs > 1 ? hrs : 0, mins);
         }
@@ -120,14 +121,15 @@ function getTimerHtml(targ) {
 
     return ''
 }
+
 let notificationOne;
-window.addEventListener("focus", function(event)
-{
+window.addEventListener("focus", function (event) {
     reminderData.stopSound();
     if (notificationOne) {
         notificationOne.close()
     }
 }, false);
+
 function updateTimerHtml(v, targ) {
     const el = document.getElementById(targ);
     if (el) {
@@ -160,7 +162,7 @@ function updateTimer(data) {
             }
             const cnd = showRemaining(elapsedTime);
             // updateTimerHtml(cnd, 'time')
-            const dt = `(${cnd}) ${TIMER_TITLE}${elapsedTime}`;
+            const dt = cnd && elapsedTime > 0 ? `(${cnd}) ${TIMER_TITLE}${elapsedTime}` : 'Timer';
 
             document.title = `${dt}`;
 
@@ -168,8 +170,11 @@ function updateTimer(data) {
             break;
         case 'mm':
             // timer.mmHtml.innerText = makeTimeString(data.value);
+
             updateTimerHtml(data.value, 'minutes');
             reminderData.minutesPassed++;
+            console.log('MINU')
+            console.log(reminderData.minutesPassed)
             break;
         case 'hh':
             // timer.hhHtml.innerText = makeTimeString(data.value);
@@ -264,18 +269,24 @@ function Reminder() {
     /**If reminders are enabled and the hours and minutes passed is the same as
      * the set interval, return true.*/
     this.intervalHasPassed = function () {
-        if (!this.isReminderEnabled) {
-            return false;
-        }
+        // console.log('this.isReminderEnabled = ', this.isReminderEnabled)
+        if (!this.isReminderEnabled) return false;
 
+        let remMinutes = +parseFloat(this.reminderInterval[1]).toFixed(2);
         const hours = this.hoursPassed === this.reminderInterval[0];
-        let minutes = this.minutesPassed === this.reminderInterval[1];
+        this.minutesPassed = Math.floor(this.secPassed / 60);
+        let minutes = false;
 
-        if (this.reminderInterval[1] < 1) {
-            if (this.secPassed >= this.reminderInterval[1] * 100) {
-                minutes = true;
-            }
+        remMinutes = remMinutes > 1 ? remMinutes * 60 : remMinutes * 100;
+
+        if (this.secPassed >= remMinutes) {
+            minutes = true;
         }
+        // console.log('to off = ', this.hoursPassed, this.minutesPassed, this.secPassed)
+        // console.log('to off = ', hours, minutes)
+        // console.log('this.reminderInterval = ', this.reminderInterval[0], remMinutes)
+        // console.log('to off = ', hours && minutes)
+
         return hours && minutes;
     }
 
@@ -302,6 +313,7 @@ window.safTimerSet = (h, m) => reminderData.setReminderInterval(+h, +m);
 
 /*-----------------------:WEB WORKERS-----------------------*/
 let web_worker;
+
 /**If web workers are supported, create a new one that utilises "timer-worker"
  * and store it inside of web_worker. Setup an event listener that is triggered when
  * postMessage() is called from within "timer-worker" This event listener will call updateTimer(),
@@ -312,6 +324,7 @@ function startBackgroundProcess() {
             web_worker = new Worker("timer-worker.js");
         }
         web_worker.onmessage = function (event) {
+            console.log(event);
             updateTimer(event.data);
         };
     } else {
