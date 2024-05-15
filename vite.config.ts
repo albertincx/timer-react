@@ -16,6 +16,7 @@ export default ({mode}) => {
         plugins: [
             react(),
             VitePWA({
+                filename: 'sw.js',
                 devOptions: {
                     enabled: true,
                     type: 'module',
@@ -35,6 +36,8 @@ export default ({mode}) => {
                         }
                     ]
                 },
+                srcDir: 'src/service-worker',
+                strategies: 'injectManifest',
             }),
             dev && {
                 name: "deep-index",
@@ -59,6 +62,6 @@ export default ({mode}) => {
                     }
                 }
             }
-        ]
+        ],
     })
 }
