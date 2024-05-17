@@ -5,7 +5,7 @@ let canUseNotifications = true;
 
 const getTimeStr = (t) => `${t < 10 ? `0${t}` : t}`;
 const showSep = (d) => d ? `:` : ''
-
+const toFix = (n, s = 2) => +parseFloat(n).toFixed(s)
 let isNotifyOn = false;
 
 if ('Notification' in window) {
@@ -86,13 +86,11 @@ function Timer() {
         reminderData.minutesPassed = 0;
         reminderData.secPassed = 0;
         if (s) {
-            const hrs = s / 60 / 60;
             let mins = s / 60;
-
             if (s < 60) {
                 mins = s / 100;
             }
-            reminderData.setReminderInterval(hrs > 1 ? hrs : 0, mins);
+            reminderData.setReminderInterval(0, mins);
         }
         //If the state being changed into is false
         if (!isEnabled === false) {
@@ -280,8 +278,8 @@ function Reminder() {
     this.setReminderInterval = function (hours, minutes, fromStorage) {
         fromStorage = fromStorage || false;
 
-        this.reminderInterval[0] = +hours;
-        this.reminderInterval[1] = +minutes;
+        this.reminderInterval[0] = toFix(hours);
+        this.reminderInterval[1] = toFix(minutes);
         //If no reminder is set, disable the timer.
         this.isReminderEnabled = !(this.reminderInterval[0] === 0 && this.reminderInterval[1] === 0);
         /*If the data isn't from local storage, set the local storage to the current reminder interval*/
@@ -295,21 +293,21 @@ function Reminder() {
     this.intervalHasPassed = function () {
         if (!this.isReminderEnabled) return false;
 
-        let remMinutes = +parseFloat(this.reminderInterval[1]).toFixed(2);
-        const hours = this.hoursPassed === this.reminderInterval[0];
+        let remMinutes = toFix(this.reminderInterval[1]);
+        let remHours = toFix(this.reminderInterval[0]);
+        const hours = this.hoursPassed === remHours;
         this.minutesPassed = Math.floor(this.secPassed / 60);
         let minutes = false;
-        // console.log('to off = ', remMinutes)
 
         remMinutes = remMinutes >= 1 ? remMinutes * 60 : remMinutes * 100;
 
-        if (this.secPassed >= remMinutes) {
-            minutes = true;
-        }
-        // console.log('to off = ', this.hoursPassed, this.minutesPassed, this.secPassed)
+        if (this.secPassed >= remMinutes) minutes = true;
+
+        // console.log('this.hoursPassed = ', this.hoursPassed, this.minutesPassed, this.secPassed)
+        // console.log('this.minutesPassed = ', this.minutesPassed, this.secPassed)
+        // console.log('this.secPassed = ', this.secPassed)
         // console.log('to off = ', hours, minutes)
         // console.log('this.reminderInterval = ', this.reminderInterval[0], remMinutes)
-        // console.log('to off = ', hours && minutes)
 
         return hours && minutes;
     }
@@ -328,12 +326,6 @@ function Reminder() {
 }
 
 let reminderData = new Reminder(); //Create the instance of Reminder()
-
-
-/*-----------------------:SETTINGS FUNCTIONALITY-----------------------*/
-/**When the apply button is clicked on the settings menu, set the reminderInterval to the
- * values selected in the dropdowns and then switch back to the timer display*/
-window.safTimerSet = (h, m) => reminderData.setReminderInterval(+h, +m);
 
 /*-----------------------:WEB WORKERS-----------------------*/
 let web_worker;
