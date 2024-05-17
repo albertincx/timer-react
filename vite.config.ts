@@ -33,7 +33,7 @@ export default ({mode}) => {
                     enabled: true,
                     type: 'module',
                 },
-                registerType: 'autoUpdate',
+                registerType: 'prompt',
                 includeAssets: [faviconURL],
                 manifest: {
                     name: "offline timer",
