@@ -34,7 +34,7 @@ export default function MsComponent(props: MSProps) {
 
     return (
         <div>
-            <div className="ms-default-trigger" ref={triggerRef}>
+            <div className="ms-default-trigger btn" ref={triggerRef}>
                 {props.children || props.placeholder || "Select custom time"}
             </div>
         </div>

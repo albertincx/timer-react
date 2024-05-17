@@ -4,17 +4,32 @@ import {defineConfig} from 'vite'
 import react from '@vitejs/plugin-react'
 import {VitePWA} from 'vite-plugin-pwa'
 
+import legacy from '@vitejs/plugin-legacy';
+
 let faviconURL = '/favicon.png'
 export default ({mode}) => {
     const dev = mode === 'development';
     // console.log(mode, dev);
 
     return defineConfig({
+        build: {
+            target: 'es5',
+        },
         define: {
             __BUILD__: `"${new Date().toISOString()}"` // wrapping in "" since it's a string
         },
         plugins: [
             react(),
+            legacy({
+                /**
+                 * 1. try changing these values
+                 * 2. run `pnpm build`, see the output files in dist directory
+                 * 3. run `pnpm preview`, see the actual loaded files in different versions of browsers
+                 */
+                targets: ['ie >= 10'],
+                renderLegacyChunks: true,
+                modernPolyfills: true,
+            }),
             VitePWA({
                 filename: 'sw.js',
                 devOptions: {

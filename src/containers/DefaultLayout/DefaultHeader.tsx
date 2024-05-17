@@ -11,9 +11,11 @@ const DefaultHeader = () => {
     return (
         <>
             <div className="navbar">
-                <a href="" onClick={togglePopup}>
-                    About
-                </a>
+                <div className="wrapper">
+                    <a href="" onClick={togglePopup}>
+                        About
+                    </a>
+                </div>
             </div>
             {showPopup ? (
                 <div id="open-modal" className="modal-window">
@@ -29,8 +31,12 @@ const DefaultHeader = () => {
                         <h1>Greetings!</h1>
                         <div>
                             <div>This is an offline timer</div>
-                            <div>Code is open <a
-                                href="https://github.com/albertincx/timer-react">https://github.com/albertincx/timer-react</a>
+                            <div>Code is open
+                                <div>
+                                    <a href="https://github.com/albertincx/timer-react">
+                                        https://github.com/albertincx/timer-react
+                                    </a>
+                                </div>
                             </div>
                             <p>
                                 <small>Support</small>

@@ -6,9 +6,8 @@ precacheAndRoute(self.__WB_MANIFEST || []);
 
 // Click and open notification
 self.addEventListener('notificationclick', event => {
+    console.log('Data 1', event)
     event.notification.close();
-    // console.log('Data', data)
-    console.log('Data', event.data)
     event.waitUntil(
         clients
             .matchAll({
@@ -16,12 +15,12 @@ self.addEventListener('notificationclick', event => {
                 includeUncontrolled: true
             })
             .then((clientList) => {
-                console.log('Data', clientList)
+                console.log('Data', clientList);
                 for (const client of clientList) {
                     // if (client.url === "/" && "focus" in client) return client.focus();
                     if ("focus" in client) return client.focus();
                 }
-                // if (clients.openWindow) return clients.openWindow("/");
+                if (clients.openWindow) return clients.openWindow("/");
             }),
     );
 });

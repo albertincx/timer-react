@@ -33,12 +33,6 @@ button.del-icon {
     overflow-y: auto;
 }
 
-@media (max-height: 500px) {
-    .modal-window > div > div {
-        height: 46vh;
-    }
-}
-
 .buttons {
     position: fixed;
     top: 11px;
@@ -139,6 +133,10 @@ button.del-icon {
     background-color: #aaa;
 }
 
+.navbar .wrapper {
+    padding: 6px 5px;
+}
+
 #navBar a {
     cursor: pointer;
     text-decoration: none;
@@ -182,6 +180,7 @@ label {
     font-family: sans-serif;
     text-align: center;
 }
+
 .App {
     display: flex;
     justify-content: space-around;
@@ -190,12 +189,14 @@ label {
     padding: 40px 0;
     background: #fff;
 }
+
 .time, .time-wrapper > div {
     font-size: 0.7em;
 }
 
 .ms-default-trigger {
-    width: 350px;
+    width: 200px;
+    background-color: #fff;
     border: 1px solid rebeccapurple;
     border-radius: 5px;
     line-height: 35px;
@@ -228,6 +229,7 @@ label {
     grid-template-columns: repeat(auto-fill,
     minmax(150px, 1fr));
     grid-gap: 10px;
+    padding: 0 10px;
 }
 
 .grid > div {
@@ -245,8 +247,6 @@ label {
     background-repeat: no-repeat;
     padding-left: 40px;
 }
-
-
 
 .timer {
     display: flex;
@@ -289,4 +289,15 @@ label {
 
 .countdown {
     animation: countdown 1s infinite;
+}
+
+@media (max-height: 500px) {
+    .modal-window > div > div {
+        height: 46vh;
+    }
+}
+
+@media (max-width: 500px) {
+    .grid {
+    }
 }

@@ -28,7 +28,7 @@ class DefaultLayout extends Component<Props, State> {
         if (window.screen.width < 500) width = '';
 
         return (
-            <div className="app header-fixed">
+            <>
                 <DefaultHeader/>
                 <div className="app-body">
                     <main
@@ -36,12 +36,10 @@ class DefaultLayout extends Component<Props, State> {
                         id="main"
                         style={width ? {marginLeft: width} : {}}
                     >
-                        <div className="container-fluid">
-                            <AppLoadable />
-                        </div>
+                        <AppLoadable />
                     </main>
                 </div>
-            </div>
+            </>
         );
     }
 }

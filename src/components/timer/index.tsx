@@ -119,7 +119,7 @@ const MyApp = () => {
     }
 
     return (
-        <div className="App1">
+        <>
             <div className="grid times">
                 <a className="btn" href="/#timer=3" onClick={setTimer} data-time="3">3 sec</a>
                 <a className="btn" href="/#timer=30" onClick={setTimer} data-time="30">30 sec</a>
@@ -130,8 +130,8 @@ const MyApp = () => {
                 <a className="btn" href="/#timer=1200" onClick={setTimer} data-time="1200">20 min</a>
                 <a className="btn" href="/#timer=1800" onClick={setTimer} data-time="1800">30 min</a>
                 <a className="btn" href="/#timer=3600" onClick={setTimer} data-time="3600">1 hour</a>
-                <a className="btn" href="/#timer=4800" onClick={setTimer} data-time="4800">1 hour 20 min</a>
-                <a className="btn" href="/#timer=5400" onClick={setTimer} data-time="5400">1 hour 30 min</a>
+                <a className="btn" href="/#timer=4800" onClick={setTimer} data-time="4800">1 h 20 min</a>
+                <a className="btn" href="/#timer=5400" onClick={setTimer} data-time="5400">1 h 30 min</a>
             </div>
             <br/>
             <MSComponent config={config}/>
@@ -151,7 +151,7 @@ const MyApp = () => {
                     <button className="stop-timer btn" onClick={handleReset}>Stop timer!</button>
                 </>
             )}
-        </div>
+        </>
     );
 }
 
@@ -213,7 +213,7 @@ class Index extends Component<Props, IState> {
         const {modal} = this.state;
 
         return (
-            <div>
+            <>
                 {modal === POPUP_DISCUSS ? (
                     <div className='modal-window'>
                         <div>
@@ -239,7 +239,7 @@ class Index extends Component<Props, IState> {
                     </div>
                 ) : null}
                 <MyApp/>
-            </div>
+            </>
         );
     }
 }

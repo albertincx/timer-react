@@ -141,7 +141,8 @@ function getTimerHtml(targ) {
 }
 
 let notificationOne;
-window.addEventListener("focus", function () {
+window.addEventListener("focus", function (e) {
+    console.log(e);
     reminderData.stopSound();
     if (notificationOne) {
         notificationOne.close()
@@ -225,17 +226,27 @@ function updateTimer(data) {
                     reminderData.stopSound()
                     // notification.close();
                 }
-                notificationOne.onclick = () => {
+                notificationOne.onclick = (e) => {
                     // reminderData.stopSound()
                     notificationOne.close();
                 }
             } catch (e) {
                 navigator.serviceWorker.ready.then(function (registration) {
-                    registration.showNotification("Times up!", {
-                        body: "TIMER EXPIRED!",
+                    registration.showNotification(`Times ${timer.countDown} up!`, {
+                        body: `TIMER ${timer.countDown} is EXPIRED!`,
                         data: {
                             action: ['test'],
-                        }
+                            cnt: timer.countDown,
+                        },
+                        action: ['test'],
+                        actions: [
+                            {
+                                action: 'coffee-action',
+                                title: 'Coffee',
+                                type: 'button',
+                                icon: '/images/demos/action-1-128x128.png',
+                            },
+                        ],
                     });
                 });
             }
