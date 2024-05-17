@@ -12,9 +12,6 @@ export default ({mode}) => {
     // console.log(mode, dev);
 
     return defineConfig({
-        build: {
-            target: 'es5',
-        },
         define: {
             __BUILD__: `"${new Date().toISOString()}"` // wrapping in "" since it's a string
         },
@@ -26,7 +23,7 @@ export default ({mode}) => {
                  * 2. run `pnpm build`, see the output files in dist directory
                  * 3. run `pnpm preview`, see the actual loaded files in different versions of browsers
                  */
-                targets: ['ie >= 10'],
+                targets: ['ie >= 11'],
                 renderLegacyChunks: true,
                 modernPolyfills: true,
             }),
