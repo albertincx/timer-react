@@ -104,9 +104,9 @@ function Timer() {
      * If the timer is still running, pause it after resetting and then update the local storage.*/
     this.reset = function () {
         //Reset the timer.
+        reminderData.stopSound();
         reminderData.isReminderEnabled = false;
         web_worker.postMessage(["reset"]);
-        reminderData.stopSound();
         if (notificationOne) {
             notificationOne.close();
         }
