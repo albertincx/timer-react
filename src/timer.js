@@ -81,10 +81,10 @@ function Timer() {
      * call setAllStorage() to update the local storage timer values with the current values*/
     this.changeState = function (s) {
         this.countDown = s;
-        reminderData.stopSound();
         reminderData.hoursPassed = 0;
         reminderData.minutesPassed = 0;
         reminderData.secPassed = 0;
+        reminderData.stopSound();
         if (s) {
             let mins = s / 60;
             if (s < 60) {
@@ -92,14 +92,7 @@ function Timer() {
             }
             reminderData.setReminderInterval(0, mins);
         }
-        //If the state being changed into is false
-        if (!isEnabled === false) {
-            //make button a play sign.
-            // $("#changeStateBtn").html("<i class='material-icons'>play_arrow</i>");
-        } else {
-            //Make button a pause sign.
-            // $("#changeStateBtn").html("<i class='material-icons'>pause</i>");
-        }
+
         /*Stops or starts the web worker timer counting depending on the state of this timer object*/
         isEnabled = true;
         web_worker.postMessage(["state_change", isEnabled]);
@@ -113,6 +106,10 @@ function Timer() {
         //Reset the timer.
         reminderData.isReminderEnabled = false;
         web_worker.postMessage(["reset"]);
+        reminderData.stopSound();
+        if (notificationOne) {
+            notificationOne.close();
+        }
         updateTimerHtml('00', 'hours');
         updateTimerHtml('00', 'minutes');
         updateTimerHtml('00', 'seconds');
@@ -221,11 +218,9 @@ function updateTimer(data) {
                         silent: true
                     });
                 notificationOne.onclose = () => {
-                    reminderData.stopSound()
-                    // notification.close();
+                    reminderData.stopSound();
                 }
                 notificationOne.onclick = (e) => {
-                    // reminderData.stopSound()
                     notificationOne.close();
                 }
             } catch (e) {
@@ -233,7 +228,6 @@ function updateTimer(data) {
                     registration.showNotification(`Times ${timer.countDown} up!`, {
                         body: `TIMER ${timer.countDown} is EXPIRED!`,
                         data: {
-                            action: ['test'],
                             cnt: timer.countDown,
                         },
                         action: ['test'],

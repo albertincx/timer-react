@@ -28,12 +28,11 @@ export default ({mode}) => {
                 modernPolyfills: true,
             }),
             VitePWA({
-                filename: 'sw.js',
                 devOptions: {
                     enabled: true,
                     type: 'module',
                 },
-                registerType: 'prompt',
+                registerType: 'autoUpdate',
                 includeAssets: [faviconURL],
                 manifest: {
                     name: "offline timer",
@@ -49,6 +48,7 @@ export default ({mode}) => {
                     ]
                 },
                 srcDir: 'src/service-worker',
+                filename: 'sw.js',
                 strategies: 'injectManifest',
             }),
             dev && {
