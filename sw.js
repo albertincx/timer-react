@@ -22,7 +22,7 @@ if (!self.define) {
   const singleRequire = (uri, parentUri) => {
     uri = new URL(uri + ".js", parentUri).href;
     return registry[uri] || (
-
+      
         new Promise(resolve => {
           if ("document" in self) {
             const script = document.createElement("script");
@@ -35,7 +35,7 @@ if (!self.define) {
             resolve();
           }
         })
-
+      
       .then(() => {
         let promise = registry[uri];
         if (!promise) {
@@ -81,19 +81,19 @@ define(['./workbox-e264f298'], (function (workbox) { 'use strict';
    * See https://goo.gl/S9QRab
    */
   workbox.precacheAndRoute([{
-    "url": "assets/index-D9vzVTOO.js",
+    "url": "assets/index-Bl9jXkCj.js",
     "revision": null
   }, {
-    "url": "assets/index-Dkbn--n9.js",
+    "url": "assets/index-CtxCHZba.js",
     "revision": null
   }, {
     "url": "assets/index-DTiwmVFd.css",
     "revision": null
   }, {
-    "url": "assets/index-legacy-C6qVhFXk.js",
+    "url": "assets/index-legacy-BJjyzAuM.js",
     "revision": null
   }, {
-    "url": "assets/index-legacy-kE_354q6.js",
+    "url": "assets/index-legacy-pdiGrKUx.js",
     "revision": null
   }, {
     "url": "assets/index-Yon0N6zI.css",
@@ -112,7 +112,7 @@ define(['./workbox-e264f298'], (function (workbox) { 'use strict';
     "revision": null
   }, {
     "url": "index.html",
-    "revision": "37848932c86696128f2a9a18ca9448df"
+    "revision": "a739d1539fc43729a26007c26b1a7b3c"
   }, {
     "url": "timer-process.js",
     "revision": "5a65108750dc1713125072e0818e21a2"
@@ -123,38 +123,17 @@ define(['./workbox-e264f298'], (function (workbox) { 'use strict';
     "url": "favicon.png",
     "revision": "8e753dceb10e5bf3bb67f00b6a597011"
   }, {
-    "url": "pwa-192x192.png",
-    "revision": "f24c9384006bbc8de95ed69990459dca"
+    "url": "alarm-192.png",
+    "revision": "261aad9bdd9c9498432dc7f85825eb3f"
   }, {
     "url": "alarm-512.png",
     "revision": "8e1fc2ace05eda2f37dee485665ecc6d"
   }, {
     "url": "manifest.webmanifest",
-    "revision": "74037d9af2a587a2985af257d966360b"
+    "revision": "50db6e0edf08294dc3c6b58cf9a7a430"
   }], {});
   workbox.cleanupOutdatedCaches();
   workbox.registerRoute(new workbox.NavigationRoute(workbox.createHandlerBoundToURL("index.html")));
 
 }));
 //# sourceMappingURL=sw.js.map
-
-// Click and open notification
-self.addEventListener('notificationclick', event => {
-  console.log('Data 1', event)
-  event.notification.close();
-  event.waitUntil(
-      clients
-          .matchAll({
-            type: "window",
-            includeUncontrolled: true
-          })
-          .then((clientList) => {
-            console.log('Data', clientList);
-            for (const client of clientList) {
-              // if (client.url === "/" && "focus" in client) return client.focus();
-              if ("focus" in client) return client.focus();
-            }
-            if (clients.openWindow) return clients.openWindow("/");
-          }),
-  );
-});
