@@ -27,30 +27,30 @@ export default ({mode}) => {
                 renderLegacyChunks: true,
                 modernPolyfills: true,
             }),
-            VitePWA({
-                devOptions: {
-                    enabled: true,
-                    type: 'module',
-                },
-                registerType: 'autoUpdate',
-                includeAssets: [faviconURL],
-                manifest: {
-                    name: "offline timer",
-                    short_name: 'offline timer',
-                    description: 'offline timer',
-                    theme_color: '#ffffff',
-                    icons: [
-                        {
-                            src: faviconURL,
-                            sizes: '32x42',
-                            type: 'image/png',
-                        }
-                    ]
-                },
-                srcDir: 'src/service-worker',
-                filename: 'sw.js',
-                strategies: 'injectManifest',
-            }),
+            // VitePWA({
+            //     devOptions: {
+            //         enabled: true,
+            //         type: 'module',
+            //     },
+            //     registerType: 'autoUpdate',
+            //     includeAssets: [faviconURL],
+            //     manifest: {
+            //         name: "offline timer",
+            //         short_name: 'offline timer',
+            //         description: 'offline timer',
+            //         theme_color: '#ffffff',
+            //         icons: [
+            //             {
+            //                 src: faviconURL,
+            //                 sizes: '32x42',
+            //                 type: 'image/png',
+            //             }
+            //         ]
+            //     },
+            //     srcDir: 'src/service-worker',
+            //     filename: 'sw.js',
+            //     strategies: 'injectManifest',
+            // }),
             dev && {
                 name: "deep-index",
                 configureServer(server) {
