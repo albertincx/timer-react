@@ -1,16 +1,11 @@
-#### This is a source code of PWA for web
-
-### PWA WORKER TIMER ADDED from 
-https://github.com/Pjaerr/PWA-Timer
-
-### Android wrapper here timer branch (soon)
-https://github.com/albertincx/learnlanguages-app-twa
-
-### Fork from
-
-https://github.com/MengLinMaker/PWA-Vite-React-Boilerplate
+## This is only build
 
 ### Website
 
 http://timer.safiullin.io/
 
+### Source here
+https://github.com/albertincx/react-timer
+
+### Android wrapper here timer branch
+https://github.com/albertincx/learnlanguages-app-twa/tree/timer
