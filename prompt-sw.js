@@ -2168,7 +2168,7 @@ self.addEventListener("message", (event) => {
   if (event.data && event.data.type === "SKIP_WAITING")
     self.skipWaiting();
 });
-const entries = [{"revision":null,"url":"assets/index-BVVpDNwJ.js"},{"revision":null,"url":"assets/index-C9huepRG.css"},{"revision":null,"url":"assets/index-CjmyLYT0.js"},{"revision":null,"url":"assets/index-legacy-COfQJdOx.js"},{"revision":null,"url":"assets/index-legacy-CXRZlFq7.js"},{"revision":null,"url":"assets/index-Yon0N6zI.css"},{"revision":null,"url":"assets/polyfills-Bf9OOwh3.js"},{"revision":null,"url":"assets/polyfills-legacy-iNkSH-Sv.js"},{"revision":null,"url":"assets/workbox-window.prod.es5-D_kkWWxm.js"},{"revision":null,"url":"assets/workbox-window.prod.es5-legacy-BOodOgXd.js"},{"revision":"d42b16672338382212253e2a643f35a0","url":"index.html"},{"revision":"5a65108750dc1713125072e0818e21a2","url":"timer-process.js"},{"revision":"62c07dc125ba00c3a621b85fdd612bdd","url":"timer.js"},{"revision":"8e753dceb10e5bf3bb67f00b6a597011","url":"favicon.png"},{"revision":"261aad9bdd9c9498432dc7f85825eb3f","url":"alarm-192.png"},{"revision":"8e1fc2ace05eda2f37dee485665ecc6d","url":"alarm-512.png"},{"revision":"2075b40bd6dcbdd74ddd2e6ec8cf2109","url":"manifest.webmanifest"}];
+const entries = [{"revision":null,"url":"assets/index-CITPUBCh.js"},{"revision":null,"url":"assets/index-D1GWnPDg.css"},{"revision":null,"url":"assets/index-DcCUtaqp.js"},{"revision":null,"url":"assets/index-legacy-CgCDmcUI.js"},{"revision":null,"url":"assets/index-legacy-HcJ25okJ.js"},{"revision":null,"url":"assets/index-R5gwjZ5N.css"},{"revision":null,"url":"assets/polyfills-Bf9OOwh3.js"},{"revision":null,"url":"assets/polyfills-legacy-iNkSH-Sv.js"},{"revision":null,"url":"assets/workbox-window.prod.es5-D_kkWWxm.js"},{"revision":null,"url":"assets/workbox-window.prod.es5-legacy-BOodOgXd.js"},{"revision":"3ca1e0702dc1ba07bbb9d20b3ee6bc1b","url":"index.html"},{"revision":"5a65108750dc1713125072e0818e21a2","url":"timer-process.js"},{"revision":"62c07dc125ba00c3a621b85fdd612bdd","url":"timer.js"},{"revision":"8e753dceb10e5bf3bb67f00b6a597011","url":"favicon.png"},{"revision":"261aad9bdd9c9498432dc7f85825eb3f","url":"alarm-192.png"},{"revision":"8e1fc2ace05eda2f37dee485665ecc6d","url":"alarm-512.png"},{"revision":"2075b40bd6dcbdd74ddd2e6ec8cf2109","url":"manifest.webmanifest"}];
 entries.push({
   url: "/alarm-clock-short.mp3",
   revision: "00000"
@@ -2176,4 +2176,22 @@ entries.push({
 precacheAndRoute(entries);
 cleanupOutdatedCaches();
 registerRoute(new NavigationRoute(createHandlerBoundToURL("index.html")));
+self.addEventListener("notificationclick", (event) => {
+  console.log("Data 1", event);
+  event.notification.close();
+  event.waitUntil(
+    clients.matchAll({
+      type: "window",
+      includeUncontrolled: true
+    }).then((clientList) => {
+      console.log("Data", clientList);
+      for (const client of clientList) {
+        if ("focus" in client)
+          return client.focus();
+      }
+      if (clients.openWindow)
+        return clients.openWindow("/");
+    })
+  );
+});
 //# sourceMappingURL=prompt-sw.js.map
