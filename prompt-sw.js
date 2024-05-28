@@ -2168,9 +2168,13 @@ self.addEventListener("message", (event) => {
   if (event.data && event.data.type === "SKIP_WAITING")
     self.skipWaiting();
 });
-const entries = [{"revision":null,"url":"assets/index-BYEJVqWa.css"},{"revision":null,"url":"assets/index-C-qmgHBk.js"},{"revision":null,"url":"assets/index-CVetwSf4.css"},{"revision":null,"url":"assets/index-DjvRUCW0.js"},{"revision":null,"url":"assets/index-legacy-CZNME_KA.js"},{"revision":null,"url":"assets/index-legacy-DyrNMn-X.js"},{"revision":null,"url":"assets/polyfills-JAlfwthW.js"},{"revision":null,"url":"assets/polyfills-legacy-Dhvx377c.js"},{"revision":null,"url":"assets/workbox-window.prod.es5-D_kkWWxm.js"},{"revision":null,"url":"assets/workbox-window.prod.es5-legacy-BOodOgXd.js"},{"revision":"f4c2a72793da1dbd214cb25771517417","url":"index.html"},{"revision":"b04e29c814428ae5ad9a62123a2311d5","url":"timer-process.js"},{"revision":"846b3adddd01c4eed5f25485e0115548","url":"timer.js"},{"revision":"8e753dceb10e5bf3bb67f00b6a597011","url":"favicon.png"},{"revision":"261aad9bdd9c9498432dc7f85825eb3f","url":"alarm-192.png"},{"revision":"8e1fc2ace05eda2f37dee485665ecc6d","url":"alarm-512.png"},{"revision":"2075b40bd6dcbdd74ddd2e6ec8cf2109","url":"manifest.webmanifest"}];
+const entries = [{"revision":null,"url":"assets/index-BY9eVUEX.js"},{"revision":null,"url":"assets/index-BYEJVqWa.css"},{"revision":null,"url":"assets/index-CUuimBow.js"},{"revision":null,"url":"assets/index-CVetwSf4.css"},{"revision":null,"url":"assets/index-legacy-COWZbl2R.js"},{"revision":null,"url":"assets/index-legacy-CW1eesDZ.js"},{"revision":null,"url":"assets/polyfills-JAlfwthW.js"},{"revision":null,"url":"assets/polyfills-legacy-Dhvx377c.js"},{"revision":null,"url":"assets/workbox-window.prod.es5-D_kkWWxm.js"},{"revision":null,"url":"assets/workbox-window.prod.es5-legacy-BOodOgXd.js"},{"revision":"d67fd3c32774d2d2c91be87d23e5c945","url":"index.html"},{"revision":"b04e29c814428ae5ad9a62123a2311d5","url":"timer-process.js"},{"revision":"846b3adddd01c4eed5f25485e0115548","url":"timer.js"},{"revision":"8e753dceb10e5bf3bb67f00b6a597011","url":"favicon.png"},{"revision":"261aad9bdd9c9498432dc7f85825eb3f","url":"alarm-192.png"},{"revision":"8e1fc2ace05eda2f37dee485665ecc6d","url":"alarm-512.png"},{"revision":"2075b40bd6dcbdd74ddd2e6ec8cf2109","url":"manifest.webmanifest"}];
 entries.push({
   url: "/alarm-clock-short.mp3",
+  revision: "00000"
+});
+entries.push({
+  url: "/favicon.png",
   revision: "00000"
 });
 precacheAndRoute(entries);
